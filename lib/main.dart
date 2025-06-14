@@ -1,7 +1,6 @@
 import 'package:family_shop/home.dart';
 import 'package:flutter/material.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
@@ -11,7 +10,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-     title: "Family Shop",
+      debugShowCheckedModeBanner: false,
+      title: "Family Shop",
       home: const Home(),
     );
   }

@@ -9,12 +9,15 @@ class UserItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Image.asset(product.image),
-      ],
+        children: [
+          Image.asset(product.image),
+        ],
       ),
     );
   }
