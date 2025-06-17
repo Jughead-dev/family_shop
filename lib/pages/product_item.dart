@@ -1,4 +1,5 @@
 import 'package:family_shop/model/product.dart';
+import 'package:family_shop/pages/shopping_cart.dart';
 import 'package:flutter/material.dart';
 
 class ProductItem extends StatelessWidget {
@@ -32,7 +33,14 @@ class ProductItem extends StatelessWidget {
                 border: Border.all(color: Colors.black),
                 borderRadius: BorderRadius.circular(50)),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ShoppingCart(),
+                  ),
+                );
+              },
               icon: Icon(Icons.shopping_bag_outlined),
             ),
           ),
@@ -81,43 +89,44 @@ class ProductItem extends StatelessWidget {
                     color: Colors.black,
                     fontSize: 20),
               ),
-              Row(
-                children: [
-                  Icon(
-                    Icons.star,
-                    color: Colors.amber,
-                  ),
-                  SizedBox(width: 3),
-                ],
-              ),
-              SizedBox(height: 12),
+              SizedBox(height: 22),
               Text(
                 product.description,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
-              SizedBox(height: 32),
-              MaterialButton(
-                onPressed: () {},
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.greenAccent,
-                      borderRadius: BorderRadius.circular(12)),
-                  height: 52,
-                  width: 178,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Add cart",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
+              SizedBox(height: 112),
+            ],
+          ),
+        ),
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(left: 50, right: 20),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                height: 60,
+                child: InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Text(
+                      "Add Cart",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

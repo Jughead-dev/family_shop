@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'package:family_shop/model/product.dart';
 import 'package:family_shop/model/user.dart';
 import 'package:family_shop/pages/product_item.dart';
-import 'package:family_shop/pages/user_item.dart';
+import 'package:family_shop/pages/search.dart';
+import 'package:family_shop/pages/shopping_cart.dart';
+import 'package:family_shop/pages/profile_page.dart';
 import 'package:family_shop/shop_api.dart';
 import 'package:flutter/material.dart';
 
@@ -54,7 +56,7 @@ class _HomeState extends State<Home> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => UserItem(
+                  builder: (context) => ProfilePage(
                         user: users.first,
                       )),
             );
@@ -75,7 +77,14 @@ class _HomeState extends State<Home> {
               borderRadius: BorderRadius.circular(50),
             ),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Search(),
+                  ),
+                );
+              },
               icon: Icon(Icons.content_paste_search_outlined),
             ),
           ),
@@ -86,7 +95,14 @@ class _HomeState extends State<Home> {
               borderRadius: BorderRadius.circular(50),
             ),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ShoppingCart(),
+                  ),
+                );
+              },
               icon: Icon(Icons.shopping_cart_outlined),
             ),
           ),
@@ -111,19 +127,7 @@ class _HomeState extends State<Home> {
                             fontWeight: FontWeight.bold, fontSize: 18),
                       ),
                       SizedBox(height: 10),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [],
-                        ),
-                      ),
                     ],
-                  ),
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [],
                   ),
                 ),
                 Expanded(
@@ -176,6 +180,7 @@ class _HomeState extends State<Home> {
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               SizedBox(height: 6),
                               Text(
