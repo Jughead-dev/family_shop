@@ -1,11 +1,15 @@
 import 'dart:convert';
 import 'package:family_shop/model/product.dart';
-import 'package:family_shop/model/product_item.dart';
+import 'package:family_shop/model/user.dart';
+import 'package:family_shop/pages/product_item.dart';
+import 'package:family_shop/pages/user_item.dart';
 import 'package:family_shop/shop_api.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  const Home({
+    super.key,
+  });
 
   @override
   State<Home> createState() => _HomeState();
@@ -13,31 +17,51 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<Product> products = [];
+  List<User> users = [];
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     getProduct();
+    getUser();
   }
 
   void getProduct() async {
     String? res = await ShopApi.GET("/products", {});
-    if (res != null) {
-      List list = jsonDecode(res);
-      products = list.map((e) => Product.fromJson(e)).toList();
-      setState(() {
-        isLoading = false;
-      });
-    }
+    List list = jsonDecode(res!);
+    products = list.map((e) => Product.fromJson(e)).toList();
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  void getUser() async {
+    String? res = await ShopApi.GET("/users", {});
+    List list = jsonDecode(res!);
+    users = list.map((a) => User.fromJson(a)).toList();
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: CircleAvatar(
-          backgroundImage: AssetImage("assets/images/logo.webp"),
+        leading: MaterialButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => UserItem(
+                        user: users.first,
+                      )),
+            );
+          },
+          child: CircleAvatar(
+            backgroundImage: AssetImage("assets/images/logo.webp"),
+          ),
         ),
         title: Text(
           "Oila Market",
@@ -45,14 +69,28 @@ class _HomeState extends State<Home> {
         ),
         centerTitle: true,
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.content_paste_search_outlined),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.content_paste_search_outlined),
+            ),
           ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.shopping_cart_outlined),
+          SizedBox(width: 7),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.shopping_cart_outlined),
+            ),
           ),
+          SizedBox(width: 9),
         ],
       ),
       body: isLoading
@@ -68,7 +106,7 @@ class _HomeState extends State<Home> {
                       Text("Hi Don"),
                       SizedBox(height: 4),
                       Text(
-                        "What are you looking for today?",
+                        "What are you looking for\n today?",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18),
                       ),
@@ -76,12 +114,16 @@ class _HomeState extends State<Home> {
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
-                          children: [
-                          
-                          ],
+                          children: [],
                         ),
                       ),
                     ],
+                  ),
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [],
                   ),
                 ),
                 Expanded(

@@ -1,4 +1,4 @@
-import 'package:family_shop/home.dart';
+import 'package:family_shop/splash_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Family Shop",
-      home: const Home(),
+      home: const SplashPage(),
     );
   }
 }
