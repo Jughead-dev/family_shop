@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:family_shop/home.dart';
 import 'package:family_shop/model/user.dart';
 import 'package:family_shop/shop_api.dart';
 import 'package:flutter/material.dart';
@@ -41,9 +39,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 onPressed: () {
                   Navigator.pop(
                     context,
-                    //hatoooo
-                    //dm xatoooo
-                    //ilova iwlamidi
                   );
                 },
                 icon: Icon(size: 30, Icons.arrow_back)),

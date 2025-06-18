@@ -1,6 +1,5 @@
 import 'package:family_shop/home.dart';
 import 'package:flutter/material.dart';
-
 import 'package:lottie/lottie.dart';
 
 class SplashPage extends StatefulWidget {
@@ -10,15 +9,32 @@ class SplashPage extends StatefulWidget {
   State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
-  AnimationController? _controller;
-  double duration = 10;
+class _SplashPageState extends State<SplashPage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    startTimer();
+
     _controller = AnimationController(vsync: this);
+
+    Future.delayed(const Duration(seconds: 3), () {
+      if (context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Home()),
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // Hamma joyda mana buni qilish kerak:
+    _controller.stop();
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -33,36 +49,25 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
               'assets/animation/anime1.json',
               height: 300,
               width: 300,
-              fit: BoxFit.cover,
               controller: _controller,
               onLoaded: (composition) {
-                _controller!
+                _controller
                   ..duration = composition.duration
                   ..forward();
               },
             ),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               "Oila Marketi",
               style: TextStyle(
                 letterSpacing: 5,
                 fontWeight: FontWeight.bold,
-                fontSize: 20,
+                fontSize: 24,
               ),
             ),
           ],
         ),
       ),
     );
-  }
-
-  void startTimer() async {
-    await Future.delayed(_controller?.duration ?? Duration(seconds: 5));
-    if (context.mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Home()),
-      );
-    }
   }
 }

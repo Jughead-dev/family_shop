@@ -2,11 +2,18 @@ import 'package:family_shop/model/product.dart';
 import 'package:family_shop/pages/shopping_cart.dart';
 import 'package:flutter/material.dart';
 
-class ProductItem extends StatelessWidget {
+class ProductItem extends StatefulWidget {
   final Product product;
 
   const ProductItem({required this.product, super.key});
 
+  @override
+  State<ProductItem> createState() => _ProductItemState();
+}
+
+class _ProductItemState extends State<ProductItem> {
+  bool isLiked = false;
+  int son = 1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +64,7 @@ class ProductItem extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(height: 12),
-              Image.network(product.image,
+              Image.network(widget.product.image,
                   height: 300, width: 330, fit: BoxFit.cover),
               SizedBox(height: 22),
               Row(
@@ -65,7 +72,7 @@ class ProductItem extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      "\$${product.price.toString()}",
+                      "\$${widget.product.price.toString()}",
                       style: TextStyle(
                           color: Colors.greenAccent,
                           fontSize: 22,
@@ -78,12 +85,24 @@ class ProductItem extends StatelessWidget {
                         borderRadius: BorderRadius.circular(50),
                       ),
                       child: IconButton(
-                          onPressed: () {},
-                          icon: Icon(size: 30, Icons.favorite_border))),
+                          onPressed: () {
+                            setState(() {
+                              isLiked = !isLiked;
+                            });
+                          },
+                          icon: isLiked
+                              ? Icon(
+                                  Icons.favorite,
+                                  color: Colors.red,
+                                )
+                              : Icon(
+                                  Icons.favorite_border,
+                                  color: Colors.white,
+                                ))),
                 ],
               ),
               Text(
-                product.title,
+                widget.product.title,
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
@@ -91,7 +110,7 @@ class ProductItem extends StatelessWidget {
               ),
               SizedBox(height: 22),
               Text(
-                product.description,
+                widget.product.description,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               SizedBox(height: 112),
@@ -99,28 +118,82 @@ class ProductItem extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(left: 50, right: 20),
+      // floatingActionButton: Padding(
+      //   padding: const EdgeInsets.only(left: 50, right: 20),
+      //   child: Row(
+      //     children: [
+      //       Expanded(
+      //         flex: 2,
+      //         child: Container(
+      //           decoration: BoxDecoration(
+      //             color: Colors.green,
+      //             borderRadius: BorderRadius.circular(12),
+      //           ),
+      //           height: 60,
+      //           child: InkWell(
+      //             child: Padding(
+      //               padding: const EdgeInsets.only(top: 16),
+      //               child: Text(
+      //                 "Add Cart",
+      //                 textAlign: TextAlign.center,
+      //                 style: TextStyle(
+      //                     color: Colors.white,
+      //                     fontSize: 20,
+      //                     fontWeight: FontWeight.bold),
+      //               ),
+      //             ),
+      //           ),
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),
+      bottomNavigationBar: Container(
+        height: 80,
         child: Row(
           children: [
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  if (son > 1) {
+                    son = son - 1;
+                  }
+                });
+              },
+              icon: Icon(Icons.remove_circle_outline, size: 28),
+            ),
+            SizedBox(width: 3),
+            Text(son.toString(), style: TextStyle(fontSize: 28)),
+            SizedBox(width: 3),
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  son = son + 1;
+                });
+              },
+              icon: Icon(Icons.add_circle_outline, size: 28),
+            ),
+            SizedBox(width: 8),
             Expanded(
-              flex: 2,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                height: 60,
-                child: InkWell(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: Text(
-                      "Add Cart",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: MaterialButton(
+                  onPressed: () {},
+                  child: Container(
+                    height: 52,
+                    decoration: BoxDecoration(
+                      color: Colors.deepOrange,
+                      borderRadius: BorderRadius.circular(28),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.shopping_cart_outlined, color: Colors.white),
+                        Text(
+                          "Add to Cart",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
                     ),
                   ),
                 ),
