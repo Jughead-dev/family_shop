@@ -1,3 +1,4 @@
+import 'package:family_shop/model/global_list.dart';
 import 'package:family_shop/model/product.dart';
 import 'package:family_shop/pages/shopping_cart.dart';
 import 'package:flutter/material.dart';
@@ -97,7 +98,7 @@ class _ProductItemState extends State<ProductItem> {
                                 )
                               : Icon(
                                   Icons.favorite_border,
-                                  color: Colors.white,
+                                  color: Colors.grey,
                                 ))),
                 ],
               ),
@@ -177,8 +178,12 @@ class _ProductItemState extends State<ProductItem> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: MaterialButton(
-                  onPressed: () {},
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      bag.add(widget.product);
+                    });
+                  },
                   child: Container(
                     height: 52,
                     decoration: BoxDecoration(

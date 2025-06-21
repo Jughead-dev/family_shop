@@ -189,11 +189,10 @@ class _HomeState extends State<Home> {
                       padding: EdgeInsets.all(10),
                       itemCount: filteredProducts.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 10,
-                        crossAxisSpacing: 10,
-                        childAspectRatio: 0.7,
-                      ),
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                          childAspectRatio: 0.7),
                       itemBuilder: (context, index) {
                         final product = filteredProducts[index];
                         return GestureDetector(
@@ -236,7 +235,7 @@ class _HomeState extends State<Home> {
                                   textAlign: TextAlign.center,
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(height: 6),
+                                SizedBox(height: 32),
                                 Text(
                                   "\$${product.price.toStringAsFixed(2)}",
                                   style: TextStyle(
