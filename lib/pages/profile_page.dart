@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:family_shop/model/user.dart';
+import 'package:family_shop/pages/favorite_page.dart';
+import 'package:family_shop/pages/shopping_cart.dart';
 import 'package:family_shop/shop_api.dart';
 import 'package:flutter/material.dart';
 
@@ -16,8 +18,9 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool isLoading = false;
+  bool showTerms = false;
   late User userModel;
-
+  bool showAddress = false;
   @override
   void initState() {
     super.initState();
@@ -33,12 +36,12 @@ class _ProfilePageState extends State<ProfilePage> {
         leading: Padding(
           padding: const EdgeInsets.all(6),
           child: IconButton(
-                onPressed: () {
-                  Navigator.pop(
-                    context,
-                  );
-                },
-                icon: Icon(size: 30, Icons.arrow_back)),
+              onPressed: () {
+                Navigator.pop(
+                  context,
+                );
+              },
+              icon: Icon(size: 30, Icons.arrow_back)),
         ),
         title: Text(
           "Profile",
@@ -54,50 +57,34 @@ class _ProfilePageState extends State<ProfilePage> {
               padding: const EdgeInsets.all(12),
               child: Column(
                 children: [
-                  InkWell(
-                    onTap: () {},
-                    child: Container(
-                      height: 52,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 4,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundImage: NetworkImage(
+                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlie4MsQ9pJSSKY7DoEpxn3uBAq-rT7in1sA&s"),
                       ),
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage:
-                                AssetImage("assets/images/person.webp"),
-                          ),
-                          SizedBox(width: 12),
-                          Padding(
-                            padding: const EdgeInsets.all(5),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  userModel.username,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  userModel.email,
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
+                      SizedBox(width: 12),
+                      Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              userModel.username,
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                          ),
-                        ],
+                            Text(
+                              userModel.email,
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                   Expanded(
                     child: SingleChildScrollView(
@@ -105,17 +92,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          SizedBox(height: 22),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                "General",
-                                style:
-                                    TextStyle(fontSize: 22, color: Colors.grey),
-                              ),
-                            ],
-                          ),
                           SizedBox(
                             height: 22,
                           ),
@@ -157,7 +133,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           SizedBox(height: 22),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ShoppingCart(),
+                                  ));
+                            },
                             child: Container(
                               height: 52,
                               decoration: BoxDecoration(
@@ -177,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   children: [
                                     Expanded(
                                         child: Text(
-                                      "Notifications",
+                                      "My Bag",
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 22,
@@ -194,7 +176,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           SizedBox(height: 22),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FavoritePage(),
+                                  ));
+                            },
                             child: Container(
                               height: 52,
                               decoration: BoxDecoration(
@@ -229,20 +217,106 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 22),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Legal",
-                                style:
-                                    TextStyle(fontSize: 22, color: Colors.grey),
+                          SizedBox(
+                            height: 22,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                showAddress = !showAddress;
+                              });
+                            },
+                            child: Container(
+                              height: 52,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
                               ),
-                            ],
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        child: Text(
+                                      "Shipping Addresses",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                                    Icon(
+                                      showAddress
+                                          ? Icons.keyboard_arrow_up
+                                          : Icons.keyboard_arrow_right,
+                                      size: 38,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Visibility(
+                            visible: showAddress,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                width: MediaQuery.sizeOf(context).width,
+                                decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.grey, width: 1),
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.grey.shade200,
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Name: ${userModel.username}",
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        "Email: ${userModel.email}",
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        "Password: ${userModel.password}",
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        "Address: ${userModel.address.city}",
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        "Phone: ${userModel.phone}",
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                           SizedBox(height: 22),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              setState(() {
+                                showTerms = !showTerms;
+                              });
+                            },
                             child: Container(
                               height: 52,
                               decoration: BoxDecoration(
@@ -269,7 +343,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                           fontWeight: FontWeight.bold),
                                     )),
                                     Icon(
-                                      Icons.keyboard_arrow_right,
+                                      showTerms
+                                          ? Icons.keyboard_arrow_up
+                                          : Icons.keyboard_arrow_right,
                                       size: 38,
                                     ),
                                   ],
@@ -277,122 +353,43 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 22),
-                          InkWell(
-                            onTap: () {},
-                            child: Container(
-                              height: 52,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 4,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
+                          Visibility(
+                            visible: showTerms,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                left: 8,
+                                right: 8,
+                                bottom: 8,
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        child: Text(
-                                      "Privacy Police",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold),
-                                    )),
-                                    Icon(
-                                      Icons.keyboard_arrow_right,
-                                      size: 38,
-                                    ),
-                                  ],
+                              child: Container(
+                                width: MediaQuery.sizeOf(context).width,
+                                padding: EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade200,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: Colors.grey),
                                 ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 22),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Personal",
-                                style:
-                                    TextStyle(fontSize: 22, color: Colors.grey),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 22),
-                          InkWell(
-                            onTap: () {},
-                            child: Container(
-                              height: 52,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 4,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Expanded(
-                                        child: Text(
-                                      "Report a bug",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold),
-                                    )),
-                                    Icon(
-                                      Icons.keyboard_arrow_right,
-                                      size: 38,
+                                    Text(
+                                      "1. Ushbu ilovadan faqat qonuniy maqsadlarda foydalaning.",
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 22),
-                          InkWell(
-                            onTap: () {},
-                            child: Container(
-                              height: 52,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 4,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        child: Text(
-                                      "Logout",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold),
-                                    )),
-                                    Icon(
-                                      Icons.keyboard_arrow_right,
-                                      size: 38,
+                                    SizedBox(height: 5),
+                                    Text(
+                                      "2. Profil ma'lumotlaringizni maxfiy saqlang.",
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      "3. Narxlar va mahsulotlar o'zgarishi mumkin.",
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      "4. Yetkazib berishdagi kechikishlar uchun biz mas'ul emasmiz.",
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      "5. Sizning ma'lumotlaringiz bizning Maxfiylik siyosatimiz asosida himoyalangan.",
                                     ),
                                   ],
                                 ),

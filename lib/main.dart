@@ -1,8 +1,11 @@
+import 'package:family_shop/model/favorite_model.dart';
 import 'package:family_shop/splash_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+      ChangeNotifierProvider(create: (_) => FavoriteModel(), child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

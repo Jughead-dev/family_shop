@@ -15,6 +15,7 @@ dependencies:
   flutter_layout_grid: ^2.0.8
   cached_network_image: ^3.4.1
   shared_preferences: ^2.5.3
+  provider: ^6.0.5
   lottie: ^3.2.0
 
 dev_dependencies:

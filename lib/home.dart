@@ -26,7 +26,6 @@ class _HomeState extends State<Home> {
     {"label": "Electronics", "value": "electronics"},
   ];
   String selectedCategory = "All";
-
   List<Product> products = [];
   List<User> users = [];
   bool isLoading = true;
@@ -118,8 +117,6 @@ class _HomeState extends State<Home> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Hi Don"),
-                      SizedBox(height: 4),
                       Text(
                         "What are you looking for\n today?",
                         style: TextStyle(
@@ -213,7 +210,7 @@ class _HomeState extends State<Home> {
                                   product.image,
                                   height: 100,
                                   width: 100,
-                                  fit: BoxFit.cover,
+                                  fit: BoxFit.contain,
                                 ),
                                 SizedBox(height: 10),
                                 Text(

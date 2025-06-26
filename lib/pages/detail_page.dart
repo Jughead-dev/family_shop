@@ -1,7 +1,9 @@
+import 'package:family_shop/model/favorite_model.dart';
 import 'package:family_shop/model/global_list.dart';
 import 'package:family_shop/model/product.dart';
 import 'package:family_shop/pages/shopping_cart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DetailPage extends StatefulWidget {
   final Product product;
@@ -14,8 +16,11 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   bool isLiked = false;
   int son = 1;
+
   @override
   Widget build(BuildContext context) {
+    final favoriteModel = Provider.of<FavoriteModel>(context);
+    bool isFavorite = favoriteModel.favorites.contains(widget.product);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -55,7 +60,7 @@ class _DetailPageState extends State<DetailPage> {
             children: [
               SizedBox(height: 12),
               Image.network(widget.product.image,
-                  height: 300, width: 330, fit: BoxFit.cover),
+                  height: 300, width: double.infinity, fit: BoxFit.contain),
               SizedBox(height: 22),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -70,27 +75,35 @@ class _DetailPageState extends State<DetailPage> {
                     ),
                   ),
                   Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isLiked = !isLiked;
-                            });
-                          },
-                          icon: isLiked
-                              ? Icon(
-                                  size: 30,
-                                  Icons.favorite,
-                                  color: Colors.red,
-                                )
-                              : Icon(
-                                  size: 30,
-                                  Icons.favorite_border,
-                                  color: Colors.grey,
-                                ))),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        final isFavorite =
+                            favoriteModel.favorites.contains(widget.product);
+                        setState(() {
+                          if (!isFavorite) {
+                            favoriteModel.add(widget.product);
+                          } else {
+                            favoriteModel.remove(widget.product);
+                          }
+                        });
+                      },
+                      icon: favoriteModel.favorites.contains(widget.product)
+                          ? Icon(
+                              size: 30,
+                              Icons.favorite,
+                              color: Colors.red,
+                            )
+                          : Icon(
+                              size: 30,
+                              Icons.favorite_border,
+                              color: Colors.grey,
+                            ),
+                    ),
+                  ),
                 ],
               ),
               Text(
@@ -110,57 +123,33 @@ class _DetailPageState extends State<DetailPage> {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        height: 80,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(left: 30),
         child: Row(
           children: [
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  if (son > 1) {
-                    son = son - 1;
-                  }
-                });
-              },
-              icon: Icon(Icons.remove_circle_outline, size: 28),
-            ),
-            SizedBox(width: 3),
-            Text(son.toString(), style: TextStyle(fontSize: 28)),
-            SizedBox(width: 3),
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  son = son + 1;
-                });
-              },
-              icon: Icon(Icons.add_circle_outline, size: 28),
-            ),
-            SizedBox(width: 8),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      bag.add(widget.product);
-                    });
+              flex: 2,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.orange,
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                height: 60,
+                child: ElevatedButton(
+                  onPressed: () {
+                    bag.add(widget.product);
                   },
-                  child: Container(
-                    height: 52,
-                    decoration: BoxDecoration(
-                      color: Colors.deepOrange,
-                      borderRadius: BorderRadius.circular(28),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.white,
+                    minimumSize: Size(double.infinity, 60),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.shopping_cart_outlined, color: Colors.white),
-                        Text(
-                          "Add to Cart",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ],
-                    ),
+                  ),
+                  child: Text(
+                    "ADD TO BAG",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),

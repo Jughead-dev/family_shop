@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:family_shop/model/global_list.dart';
-import 'package:family_shop/pages/detail_page.dart';
+import 'package:family_shop/model/product.dart';
 import 'package:flutter/material.dart';
 
 class ShoppingCart extends StatefulWidget {
@@ -11,12 +11,16 @@ class ShoppingCart extends StatefulWidget {
 }
 
 class _ShoppingCartState extends State<ShoppingCart> {
+  Map<Product, int> cartItems = {};
   bool isEmpty = false;
   bool remove = false;
   @override
   void initState() {
     super.initState();
     isEmptys();
+    for (var i in bag) {
+      cartItems[i] = (cartItems[i] ?? 0) + 1;
+    }
   }
 
   @override
@@ -35,115 +39,120 @@ class _ShoppingCartState extends State<ShoppingCart> {
               },
               icon: Icon(size: 30, Icons.arrow_back_ios)),
         ),
-        title: Text("Shopping Cart"),
+        title: Text("Your Bag"),
         centerTitle: true,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 12),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                bag.clear();
+              },
               icon: Icon(size: 30, Icons.delete_rounded),
             ),
           ),
         ],
       ),
-      body: isEmpty
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
+      body: cartItems.isEmpty
+          ? Center(child: Text("Your cart is empty"))
           : ListView.builder(
-              itemCount: bag.length,
+              itemCount: cartItems.length,
               itemBuilder: (context, index) {
-                final product = bag[index];
-                return InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DetailPage(product: product),
-                      ),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 10,
-                      right: 10,
-                      bottom: 10,
+                final product = cartItems.keys.elementAt(index);
+                final quantity = cartItems[product] ?? 1;
+                final totalPrice = product.price * quantity;
+
+                return Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey.shade300),
                     ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.grey.shade300),
-                      ),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: CachedNetworkImage(
-                              fit: BoxFit.cover,
-                              height: 100,
-                              width: 100,
-                              imageUrl: product.image,
-                            ),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: CachedNetworkImage(
+                            fit: BoxFit.cover,
+                            height: 100,
+                            width: 100,
+                            imageUrl: product.image,
                           ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: Stack(
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      product.title,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      product.category,
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      "${product.price}\$",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                product.title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                Positioned(
-                                  right: 0,
-                                  bottom: 0,
-                                  child: IconButton(
+                              ),
+                              Text(
+                                product.category,
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 13,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                "\$${product.price.toStringAsFixed(2)} each",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  IconButton(
                                     onPressed: () {
                                       setState(() {
-                                        bag.remove(product);
-                                      });
-                                      setState(() {
-                                        isEmptys();
+                                        if (quantity > 1) {
+                                          cartItems[product] = quantity - 1;
+                                        } else {
+                                          cartItems.remove(product);
+                                        }
                                       });
                                     },
-                                    icon: Icon(
-                                      Icons.remove_circle_outline_rounded,
-                                    ),
+                                    icon: Icon(Icons.remove_circle_outline),
                                     color: Colors.red,
-                                    iconSize: 24,
                                   ),
-                                ),
-                              ],
-                            ),
+                                  Text(
+                                    quantity.toString(),
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        cartItems[product] = quantity + 1;
+                                      });
+                                    },
+                                    icon: Icon(Icons.add_circle_outline),
+                                    color: Colors.green,
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    "Total: \$${totalPrice.toString()}",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 );
