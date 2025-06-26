@@ -32,18 +32,13 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: Colors.white,
         leading: Padding(
           padding: const EdgeInsets.all(6),
-          child: Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(50)),
-            child: IconButton(
+          child: IconButton(
                 onPressed: () {
                   Navigator.pop(
                     context,
                   );
                 },
                 icon: Icon(size: 30, Icons.arrow_back)),
-          ),
         ),
         title: Text(
           "Profile",

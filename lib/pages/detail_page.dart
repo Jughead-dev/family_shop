@@ -3,16 +3,15 @@ import 'package:family_shop/model/product.dart';
 import 'package:family_shop/pages/shopping_cart.dart';
 import 'package:flutter/material.dart';
 
-class ProductItem extends StatefulWidget {
+class DetailPage extends StatefulWidget {
   final Product product;
-
-  const ProductItem({required this.product, super.key});
+  const DetailPage({super.key, required this.product});
 
   @override
-  State<ProductItem> createState() => _ProductItemState();
+  State<DetailPage> createState() => _DetailPageState();
 }
 
-class _ProductItemState extends State<ProductItem> {
+class _DetailPageState extends State<DetailPage> {
   bool isLiked = false;
   int son = 1;
   @override
@@ -21,36 +20,26 @@ class _ProductItemState extends State<ProductItem> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: Padding(
-          padding: const EdgeInsets.all(6),
-          child: Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(50)),
-            child: IconButton(
-                onPressed: () {
-                  Navigator.pop(
-                    context,
-                  );
-                },
-                icon: Icon(size: 30, Icons.arrow_back_ios)),
-          ),
-        ),
-        actions: [
-          Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(50)),
-            child: IconButton(
+          padding: EdgeInsets.all(6),
+          child: IconButton(
               onPressed: () {
-                Navigator.push(
+                Navigator.pop(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => ShoppingCart(),
-                  ),
                 );
               },
-              icon: Icon(Icons.shopping_bag_outlined),
-            ),
+              icon: Icon(size: 30, Icons.arrow_back)),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ShoppingCart(),
+                ),
+              );
+            },
+            icon: Icon(size: 30, Icons.shopping_bag_outlined),
           ),
           SizedBox(
             width: 18,
@@ -93,10 +82,12 @@ class _ProductItemState extends State<ProductItem> {
                           },
                           icon: isLiked
                               ? Icon(
+                                  size: 30,
                                   Icons.favorite,
                                   color: Colors.red,
                                 )
                               : Icon(
+                                  size: 30,
                                   Icons.favorite_border,
                                   color: Colors.grey,
                                 ))),
@@ -119,36 +110,6 @@ class _ProductItemState extends State<ProductItem> {
           ),
         ),
       ),
-      // floatingActionButton: Padding(
-      //   padding: const EdgeInsets.only(left: 50, right: 20),
-      //   child: Row(
-      //     children: [
-      //       Expanded(
-      //         flex: 2,
-      //         child: Container(
-      //           decoration: BoxDecoration(
-      //             color: Colors.green,
-      //             borderRadius: BorderRadius.circular(12),
-      //           ),
-      //           height: 60,
-      //           child: InkWell(
-      //             child: Padding(
-      //               padding: const EdgeInsets.only(top: 16),
-      //               child: Text(
-      //                 "Add Cart",
-      //                 textAlign: TextAlign.center,
-      //                 style: TextStyle(
-      //                     color: Colors.white,
-      //                     fontSize: 20,
-      //                     fontWeight: FontWeight.bold),
-      //               ),
-      //             ),
-      //           ),
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
       bottomNavigationBar: Container(
         height: 80,
         child: Row(

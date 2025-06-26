@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:family_shop/model/product.dart';
 import 'package:family_shop/model/user.dart';
-import 'package:family_shop/pages/product_item.dart';
+import 'package:family_shop/pages/detail_page.dart';
 import 'package:family_shop/pages/search.dart';
 import 'package:family_shop/pages/shopping_cart.dart';
 import 'package:family_shop/pages/profile_page.dart';
@@ -82,40 +82,28 @@ class _HomeState extends State<Home> {
         ),
         centerTitle: true,
         actions: [
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Search(),
-                  ),
-                );
-              },
-              icon: Icon(Icons.content_paste_search_outlined),
-            ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Search(),
+                ),
+              );
+            },
+            icon: Icon(size: 30, Icons.content_paste_search_outlined),
           ),
           SizedBox(width: 7),
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ShoppingCart(),
-                  ),
-                );
-              },
-              icon: Icon(Icons.shopping_cart_outlined),
-            ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ShoppingCart(),
+                ),
+              );
+            },
+            icon: Icon(size: 30, Icons.shopping_cart_outlined),
           ),
           SizedBox(width: 9),
         ],
@@ -201,7 +189,7 @@ class _HomeState extends State<Home> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    ProductItem(product: product),
+                                    DetailPage(product: product),
                               ),
                             );
                           },

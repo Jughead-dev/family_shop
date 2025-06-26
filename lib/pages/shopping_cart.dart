@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:family_shop/model/global_list.dart';
-import 'package:family_shop/pages/product_item.dart';
+import 'package:family_shop/pages/detail_page.dart';
 import 'package:flutter/material.dart';
 
 class ShoppingCart extends StatefulWidget {
@@ -27,32 +27,22 @@ class _ShoppingCartState extends State<ShoppingCart> {
         backgroundColor: Colors.white,
         leading: Padding(
           padding: const EdgeInsets.all(6),
-          child: Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(50)),
-            child: IconButton(
-                onPressed: () {
-                  Navigator.pop(
-                    context,
-                  );
-                },
-                icon: Icon(size: 30, Icons.arrow_back_ios)),
-          ),
+          child: IconButton(
+              onPressed: () {
+                Navigator.pop(
+                  context,
+                );
+              },
+              icon: Icon(size: 30, Icons.arrow_back_ios)),
         ),
         title: Text("Shopping Cart"),
         centerTitle: true,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 12),
-            child: Container(
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
-                  borderRadius: BorderRadius.circular(50)),
-              child: IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.delete_rounded),
-              ),
+            child: IconButton(
+              onPressed: () {},
+              icon: Icon(size: 30, Icons.delete_rounded),
             ),
           ),
         ],
@@ -70,7 +60,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProductItem(product: product),
+                        builder: (context) => DetailPage(product: product),
                       ),
                     );
                   },
@@ -89,12 +79,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                       child: Row(
                         children: [
                           Padding(
-                            padding: EdgeInsetsGeometry.only(
-                              top: 10,
-                              bottom: 10,
-                              right: 10,
-                              left: 10,
-                            ),
+                            padding: EdgeInsets.all(10),
                             child: CachedNetworkImage(
                               fit: BoxFit.cover,
                               height: 100,
@@ -170,7 +155,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
   void isEmptys() {
     if (bag.isEmpty) {
       setState(() {
-        isEmpty = true;
+        isEmpty = false;
       });
     } else {
       setState(() {

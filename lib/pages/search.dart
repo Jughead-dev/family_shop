@@ -17,18 +17,13 @@ class _SearchState extends State<Search> {
         backgroundColor: Colors.white,
         leading: Padding(
           padding: const EdgeInsets.all(6),
-          child: Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(50)),
-            child: IconButton(
-                onPressed: () {
-                  Navigator.pop(
-                    context,
-                  );
-                },
-                icon: Icon(size: 30, Icons.arrow_back_ios)),
-          ),
+          child: IconButton(
+              onPressed: () {
+                Navigator.pop(
+                  context,
+                );
+              },
+              icon: Icon(size: 30, Icons.arrow_back_ios)),
         ),
         title: Text(
           'Search',
@@ -38,21 +33,16 @@ class _SearchState extends State<Search> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 12),
-            child: Container(
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
-                  borderRadius: BorderRadius.circular(50)),
-              child: IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ShoppingCart(),
-                    ),
-                  );
-                },
-                icon: Icon(Icons.shopping_cart),
-              ),
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ShoppingCart(),
+                  ),
+                );
+              },
+              icon: Icon(size: 30, Icons.shopping_cart),
             ),
           ),
         ],
