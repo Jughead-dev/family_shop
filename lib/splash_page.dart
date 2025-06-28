@@ -9,6 +9,7 @@ class SplashPage extends StatefulWidget {
   State<SplashPage> createState() => _SplashPageState();
 }
 
+  
 class _SplashPageState extends State<SplashPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
@@ -19,8 +20,8 @@ class _SplashPageState extends State<SplashPage>
 
     _controller = AnimationController(vsync: this);
 
-    Future.delayed(const Duration(seconds: 3), () {
-      if (context.mounted) {
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed && context.mounted) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const Home()),
@@ -31,7 +32,6 @@ class _SplashPageState extends State<SplashPage>
 
   @override
   void dispose() {
-    // Hamma joyda mana buni qilish kerak:
     _controller.stop();
     _controller.dispose();
     super.dispose();

@@ -124,15 +124,13 @@ class _SearchState extends State<Search> {
 
   void fetchProducts() async {
     String? res = await ShopApi.GET("/products", {});
-    if (res != null) {
-      List list = jsonDecode(res);
-      allProducts = list.map((e) => Product.fromJson(e)).toList();
-      filteredProducts = allProducts;
-      setState(() {
-        isLoading = false;
-      });
+    List list = jsonDecode(res!);
+    allProducts = list.map((e) => Product.fromJson(e)).toList();
+    filteredProducts = allProducts;
+    setState(() {
+      isLoading = false;
+    });
     }
-  }
 
   void filterSearchResults(String query) {
     List<Product> dummySearchList = [];

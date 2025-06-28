@@ -1,3 +1,4 @@
+import 'package:family_shop/data/local/shared_prefs_service.dart';
 import 'package:family_shop/model/favorite_model.dart';
 import 'package:family_shop/model/global_list.dart';
 import 'package:family_shop/model/product.dart';
@@ -16,23 +17,26 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   bool isLiked = false;
   int son = 1;
+  SharedPrefsService shared = SharedPrefsService();
+  @override
+  void initState() {
+    super.initState();
+    loadLikedState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final favoriteModel = Provider.of<FavoriteModel>(context);
-    bool isFavorite = favoriteModel.favorites.contains(widget.product);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: Padding(
           padding: EdgeInsets.all(6),
           child: IconButton(
-              onPressed: () {
-                Navigator.pop(
-                  context,
-                );
-              },
-              icon: Icon(size: 30, Icons.arrow_back)),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(size: 30, Icons.arrow_back),
+          ),
         ),
         actions: [
           IconButton(
@@ -46,9 +50,7 @@ class _DetailPageState extends State<DetailPage> {
             },
             icon: Icon(size: 30, Icons.shopping_bag_outlined),
           ),
-          SizedBox(
-            width: 18,
-          ),
+          SizedBox(width: 18),
         ],
       ),
       body: SingleChildScrollView(
@@ -79,9 +81,10 @@ class _DetailPageState extends State<DetailPage> {
                     child: Text(
                       "\$${widget.product.price.toString()}",
                       style: TextStyle(
-                          color: Colors.greenAccent,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold),
+                        color: Colors.greenAccent,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   Container(
@@ -90,18 +93,28 @@ class _DetailPageState extends State<DetailPage> {
                       borderRadius: BorderRadius.circular(50),
                     ),
                     child: IconButton(
-                      onPressed: () {
-                        final isFavorite =
-                            favoriteModel.favorites.contains(widget.product);
+                      onPressed: () async {
                         setState(() {
-                          if (!isFavorite) {
-                            favoriteModel.add(widget.product);
+                          isLiked = !isLiked;
+                          if (isLiked) {
+                            bool isExist = favoriteList.any(
+                              (element) => element.id == widget.product.id,
+                            );
+                            if (!isExist) {
+                              favoriteList.add(widget.product);
+                            }
                           } else {
-                            favoriteModel.remove(widget.product);
+                            favoriteList.removeWhere(
+                              (element) => element.id == widget.product.id,
+                            );
                           }
                         });
+                        await shared.setBoolData(
+                            'isLiked_${widget.product.id}', isLiked);
+                        await shared.saveProductList(
+                            'favoriteList', favoriteList);
                       },
-                      icon: favoriteModel.favorites.contains(widget.product)
+                      icon: isLiked
                           ? Icon(
                               size: 30,
                               Icons.favorite,
@@ -119,14 +132,18 @@ class _DetailPageState extends State<DetailPage> {
               Text(
                 widget.product.title,
                 style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontSize: 20),
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
               ),
               SizedBox(height: 22),
               Text(
                 widget.product.description,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
               SizedBox(height: 112),
             ],
@@ -146,8 +163,9 @@ class _DetailPageState extends State<DetailPage> {
                 ),
                 height: 60,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     bag.add(widget.product);
+                    await SharedPrefsService().saveProductList('bagList', bag);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orange,
@@ -168,5 +186,21 @@ class _DetailPageState extends State<DetailPage> {
         ),
       ),
     );
+  }
+
+  Future<void> loadLikedState() async {
+    final prefsService = SharedPrefsService();
+    isLiked =
+        await prefsService.getBoolData('isLiked_${widget.product.id}') ?? false;
+    if (isLiked) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final favoriteModel =
+            Provider.of<FavoriteModel>(context, listen: false);
+        if (!favoriteModel.favorites.contains(widget.product)) {
+          favoriteModel.add(widget.product);
+        }
+      });
+    }
+    setState(() {});
   }
 }

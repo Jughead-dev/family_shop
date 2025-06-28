@@ -5,7 +5,7 @@ class Product {
   final String description;
   final String category;
   final String image;
-
+  int count;
   Product({
     required this.id,
     required this.title,
@@ -13,18 +13,19 @@ class Product {
     required this.description,
     required this.category,
     required this.image,
+    this.count = 1,
   });
 
   Map<String, dynamic> toJson() {
-  return {
-    'id': id,
-    'title': title,
-    'price': price,
-    'description': description,
-    'category': category,
-    'image': image,
-  };
-}
+    return {
+      'id': id,
+      'title': title,
+      'price': price,
+      'description': description,
+      'category': category,
+      'image': image,
+    };
+  }
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
