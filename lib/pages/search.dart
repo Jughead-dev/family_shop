@@ -94,7 +94,7 @@ class _SearchState extends State<Search> {
                                 product.image,
                                 width: 50,
                                 height: 50,
-                                fit: BoxFit.cover,
+                                fit: BoxFit.contain,
                               ),
                               title: Text(product.title),
                               subtitle: Text(product.category),

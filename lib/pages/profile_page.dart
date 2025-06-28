@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:family_shop/model/user.dart';
+import 'package:family_shop/pages/edit_page.dart';
 import 'package:family_shop/pages/favorite_page.dart';
 import 'package:family_shop/pages/shopping_cart.dart';
 import 'package:family_shop/shop_api.dart';
@@ -96,7 +97,13 @@ class _ProfilePageState extends State<ProfilePage> {
                             height: 22,
                           ),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditPage(),
+                                  ));
+                            },
                             child: Container(
                               height: 52,
                               decoration: BoxDecoration(
@@ -116,7 +123,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   children: [
                                     Expanded(
                                         child: Text(
-                                      "Edit profile",
+                                      "Settings",
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 22,

@@ -59,8 +59,18 @@ class _DetailPageState extends State<DetailPage> {
           child: Column(
             children: [
               SizedBox(height: 12),
-              Image.network(widget.product.image,
-                  height: 300, width: double.infinity, fit: BoxFit.contain),
+              Image.network(
+                widget.product.image,
+                height: 300,
+                width: double.infinity,
+                fit: BoxFit.contain,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              ),
               SizedBox(height: 22),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,

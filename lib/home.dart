@@ -33,11 +33,20 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    getProduct();
-    getUser();
+    fetchData();
   }
 
-  void getProduct() async {
+  void fetchData() async {
+    await Future.wait([
+      getProduct(),
+      getUser(),
+    ]);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  Future<void> getProduct() async {
     String? res = await ShopApi.GET("/products", {});
     List list = jsonDecode(res!);
     products = list.map((e) => Product.fromJson(e)).toList();
@@ -46,7 +55,7 @@ class _HomeState extends State<Home> {
     });
   }
 
-  void getUser() async {
+  Future<void> getUser() async {
     String? res = await ShopApi.GET("/users", {});
     List list = jsonDecode(res!);
     users = list.map((a) => User.fromJson(a)).toList();
@@ -61,8 +70,8 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: MaterialButton(
-          onPressed: () {
+        leading: InkWell(
+          onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -71,8 +80,14 @@ class _HomeState extends State<Home> {
                       )),
             );
           },
-          child: CircleAvatar(
-            backgroundImage: AssetImage("assets/images/logo.webp"),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(100),
+            child: Image.asset(
+              "assets/images/logo.webp",
+              width: double.infinity,
+              height: 35,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         title: Text(
@@ -182,6 +197,7 @@ class _HomeState extends State<Home> {
                         final product = filteredProducts[index];
                         return GestureDetector(
                           onTap: () {
+                            print("Item tanlandi: ${product.title}");
                             Navigator.push(
                               context,
                               MaterialPageRoute(
