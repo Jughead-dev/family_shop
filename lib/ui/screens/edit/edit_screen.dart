@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class EditPage extends StatefulWidget {
-  const EditPage({super.key});
+class EditScreen extends StatefulWidget {
+  const EditScreen({super.key});
 
   @override
-  State<EditPage> createState() => _EditPageState();
+  State<EditScreen> createState() => _EditScreenState();
 }
 
-class _EditPageState extends State<EditPage> {
+class _EditScreenState extends State<EditScreen> {
   bool see = true;
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();

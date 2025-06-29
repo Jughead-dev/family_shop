@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:family_shop/model/global_list.dart'; // bag list
 import 'package:family_shop/model/product.dart';
 import 'package:family_shop/data/local/shared_prefs_service.dart';
 import 'package:flutter/material.dart';
@@ -17,31 +16,31 @@ class _ShoppingCartState extends State<ShoppingCart> {
   @override
   void initState() {
     super.initState();
-    _loadBag();
+   // _loadBag();
   }
 
-  Future<void> _loadBag() async {
-    final loadedBag = await SharedPrefsService().loadProductList('bagList');
-    bag
-      ..clear()
-      ..addAll(loadedBag);
-    cartItems.clear();
-    for (var i in bag) {
-      cartItems[i] = (cartItems[i] ?? 0) + 1;
-    }
-    setState(() {});
-  }
+  // Future<void> _loadBag() async {
+  //   final loadedBag = await SharedPrefsService().loadProductList('bagList');
+  //   bag
+  //     ..clear()
+  //     ..addAll(loadedBag);
+  //   cartItems.clear();
+  //   for (var i in bag) {
+  //     cartItems[i] = (cartItems[i] ?? 0) + 1;
+  //   }
+  //   setState(() {});
+  // }
 
-  Future<void> _saveBag() async {
-    // cartItems ni bag ro‘yxatiga aylantirib saqlash
-    bag.clear();
-    cartItems.forEach((product, quantity) {
-      for (int i = 0; i < quantity; i++) {
-        bag.add(product);
-      }
-    });
-    await SharedPrefsService().saveProductList('bagList', bag);
-  }
+  // Future<void> _saveBag() async {
+  //   // cartItems ni bag ro‘yxatiga aylantirib saqlash
+  //   bag.clear();
+  //   cartItems.forEach((product, quantity) {
+  //     for (int i = 0; i < quantity; i++) {
+  //       bag.add(product);
+  //     }
+  //   });
+  //   await SharedPrefsService().saveProductList('bagList', bag);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +133,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                                                 cartItems.remove(product);
                                               }
                                             });
-                                            await _saveBag();
+                                           // await _saveBag();
                                           },
                                           icon: const Icon(
                                               Icons.remove_circle_outline),
@@ -149,7 +148,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                                             setState(() {
                                               cartItems[product] = quantity + 1;
                                             });
-                                            await _saveBag();
+                                           // await _saveBag();
                                           },
                                           icon: const Icon(
                                               Icons.add_circle_outline),

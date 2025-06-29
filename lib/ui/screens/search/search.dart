@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:family_shop/model/product.dart';
-import 'package:family_shop/pages/detail_page.dart';
-import 'package:family_shop/pages/shopping_cart.dart';
-import 'package:family_shop/shop_api.dart';
+import 'package:family_shop/ui/screens/detail/detail_screen.dart';
+import 'package:family_shop/ui/screens/shoppingCart/shopping_cart.dart';
+import 'package:family_shop/data/remote/shop_api.dart';
 import 'package:flutter/material.dart';
 
 class Search extends StatefulWidget {
@@ -104,7 +104,7 @@ class _SearchState extends State<Search> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          DetailPage(product: product),
+                                          DetailScreen(product: product),
                                     ));
                               },
                             );

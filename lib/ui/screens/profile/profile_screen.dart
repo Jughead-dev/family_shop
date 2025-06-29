@@ -1,23 +1,23 @@
 import 'dart:convert';
 import 'package:family_shop/model/user.dart';
-import 'package:family_shop/pages/edit_page.dart';
-import 'package:family_shop/pages/favorite_page.dart';
-import 'package:family_shop/pages/shopping_cart.dart';
-import 'package:family_shop/shop_api.dart';
+import 'package:family_shop/ui/screens/edit/edit_screen.dart';
+import 'package:family_shop/ui/screens/favorite/favorite_screen.dart';
+import 'package:family_shop/ui/screens/shoppingCart/shopping_cart.dart';
+import 'package:family_shop/data/remote/shop_api.dart';
 import 'package:flutter/material.dart';
 
-class ProfilePage extends StatefulWidget {
+class ProfileScreen extends StatefulWidget {
   final User user;
-  const ProfilePage({
+  const ProfileScreen({
     super.key,
     required this.user,
   });
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfileScreenState extends State<ProfileScreen> {
   bool isLoading = false;
   bool showTerms = false;
   late User userModel;
@@ -101,7 +101,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => EditPage(),
+                                    builder: (context) => EditScreen(),
                                   ));
                             },
                             child: Container(
@@ -187,7 +187,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => FavoritePage(),
+                                    builder: (context) => FavoriteScreen(),
                                   ));
                             },
                             child: Container(

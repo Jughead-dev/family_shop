@@ -1,5 +1,5 @@
 import 'package:family_shop/model/favorite_model.dart';
-import 'package:family_shop/splash_page.dart';
+import 'package:family_shop/ui/screens/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Family Shop",
-      home: const SplashPage(),
+      home: const SplashScreen(),
     );
   }
 }

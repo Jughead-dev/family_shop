@@ -1,11 +1,11 @@
 import 'dart:convert';
+import 'package:family_shop/data/remote/shop_api.dart';
 import 'package:family_shop/model/product.dart';
 import 'package:family_shop/model/user.dart';
-import 'package:family_shop/pages/detail_page.dart';
-import 'package:family_shop/pages/search.dart';
-import 'package:family_shop/pages/shopping_cart.dart';
-import 'package:family_shop/pages/profile_page.dart';
-import 'package:family_shop/shop_api.dart';
+import 'package:family_shop/ui/screens/detail/detail_screen.dart';
+import 'package:family_shop/ui/screens/search/search.dart';
+import 'package:family_shop/ui/screens/shoppingCart/shopping_cart.dart';
+import 'package:family_shop/ui/screens/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -75,7 +75,7 @@ class _HomeState extends State<Home> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ProfilePage(
+                  builder: (context) => ProfileScreen(
                         user: users.first,
                       )),
             );
@@ -197,12 +197,11 @@ class _HomeState extends State<Home> {
                         final product = filteredProducts[index];
                         return GestureDetector(
                           onTap: () {
-                            print("Item tanlandi: ${product.title}");
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    DetailPage(product: product),
+                                    DetailScreen(product: product),
                               ),
                             );
                           },
