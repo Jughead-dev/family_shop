@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:family_shop/config/app_assets.dart';
+import 'package:family_shop/config/app_colors.dart';
 import 'package:family_shop/data/remote/shop_api.dart';
 import 'package:family_shop/model/product.dart';
 import 'package:family_shop/model/user.dart';
@@ -39,7 +42,6 @@ class _HomeState extends State<Home> {
   void fetchData() async {
     await Future.wait([
       getProduct(),
-      getUser(),
     ]);
     setState(() {
       isLoading = false;
@@ -50,15 +52,6 @@ class _HomeState extends State<Home> {
     String? res = await ShopApi.GET("/products", {});
     List list = jsonDecode(res!);
     products = list.map((e) => Product.fromJson(e)).toList();
-    setState(() {
-      isLoading = false;
-    });
-  }
-
-  Future<void> getUser() async {
-    String? res = await ShopApi.GET("/users", {});
-    List list = jsonDecode(res!);
-    users = list.map((a) => User.fromJson(a)).toList();
     setState(() {
       isLoading = false;
     });
@@ -75,15 +68,13 @@ class _HomeState extends State<Home> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ProfileScreen(
-                        user: users.first,
-                      )),
+                  builder: (context) => ProfileScreen()),
             );
           },
           child: ClipRRect(
             borderRadius: BorderRadius.circular(100),
             child: Image.asset(
-              "assets/images/logo.webp",
+              AppAssets.logo,
               width: double.infinity,
               height: 35,
               fit: BoxFit.cover,
@@ -105,7 +96,7 @@ class _HomeState extends State<Home> {
                 ),
               );
             },
-            icon: Icon(size: 30, Icons.content_paste_search_outlined),
+            icon: Icon( Icons.content_paste_search_outlined,size: 30,),
           ),
           SizedBox(width: 7),
           IconButton(
@@ -117,7 +108,7 @@ class _HomeState extends State<Home> {
                 ),
               );
             },
-            icon: Icon(size: 30, Icons.shopping_cart_outlined),
+            icon: Icon( Icons.shopping_cart_outlined,size: 30,),
           ),
           SizedBox(width: 9),
         ],
@@ -221,8 +212,8 @@ class _HomeState extends State<Home> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Image.network(
-                                  product.image,
+                               CachedNetworkImage(
+                                  imageUrl: product.image,
                                   height: 100,
                                   width: 100,
                                   fit: BoxFit.contain,
@@ -237,10 +228,10 @@ class _HomeState extends State<Home> {
                                 ),
                                 SizedBox(height: 32),
                                 Text(
-                                  "\$${product.price.toStringAsFixed(2)}",
+                                  "\$${product.price.toString()}",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.green),
+                                      color: AppColors.green),
                                 ),
                               ],
                             ),

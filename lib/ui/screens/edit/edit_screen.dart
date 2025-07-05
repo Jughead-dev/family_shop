@@ -1,7 +1,9 @@
+import 'package:family_shop/model/user.dart';
 import 'package:flutter/material.dart';
 
 class EditScreen extends StatefulWidget {
-  const EditScreen({super.key});
+  final User user;
+  const EditScreen({super.key, required this.user});
 
   @override
   State<EditScreen> createState() => _EditScreenState();
@@ -9,8 +11,16 @@ class EditScreen extends StatefulWidget {
 
 class _EditScreenState extends State<EditScreen> {
   bool see = true;
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    userNameController.text = widget.user.username;
+    emailController.text = widget.user.email;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,6 +57,7 @@ class _EditScreenState extends State<EditScreen> {
                   const SizedBox(height: 30),
                   const Text("User Name"),
                   TextField(
+                    controller: userNameController,
                     decoration: const InputDecoration(
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -71,7 +82,7 @@ class _EditScreenState extends State<EditScreen> {
                   const SizedBox(height: 20),
                   const Text("Email"),
                   TextField(
-                    controller: passwordController,
+                    controller: emailController,
                     decoration: InputDecoration(
                       fillColor: Color.fromARGB(255, 224, 222, 222),
                       filled: true,

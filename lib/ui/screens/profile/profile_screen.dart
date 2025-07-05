@@ -7,10 +7,8 @@ import 'package:family_shop/data/remote/shop_api.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final User user;
   const ProfileScreen({
     super.key,
-    required this.user,
   });
 
   @override
@@ -20,7 +18,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   bool isLoading = false;
   bool showTerms = false;
-  late User userModel;
+  User? userModel;
   bool showAddress = false;
   @override
   void initState() {
@@ -42,7 +40,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   context,
                 );
               },
-              icon: Icon(size: 30, Icons.arrow_back)),
+              icon: Icon(
+                Icons.arrow_back,
+                size: 30,
+              )),
         ),
         title: Text(
           "Profile",
@@ -73,11 +74,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              userModel.username,
+                              userModel?.username ?? '',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              userModel.email,
+                              userModel?.email ?? '',
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.bold),
@@ -98,11 +99,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           InkWell(
                             onTap: () {
-                              Navigator.push(
+                              if (userModel != null) {
+                                Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => EditScreen(),
-                                  ));
+                                    builder: (context) =>
+                                        EditScreen(user: userModel!),
+                                  ),
+                                );
+                              }
                             },
                             child: Container(
                               height: 52,
@@ -288,27 +293,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Name: ${userModel.username}",
+                                        "Name: ${userModel?.username}",
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       SizedBox(height: 5),
                                       Text(
-                                        "Email: ${userModel.email}",
+                                        "Email: ${userModel?.email}",
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       SizedBox(height: 5),
                                       Text(
-                                        "Password: ${userModel.password}",
+                                        "Password: ${userModel?.password}",
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       SizedBox(height: 5),
                                       Text(
-                                        "Address: ${userModel.address.city}",
+                                        "Address: ${userModel?.address.city}",
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       SizedBox(height: 5),
                                       Text(
-                                        "Phone: ${userModel.phone}",
+                                        "Phone: ${userModel?.phone}",
                                         style: TextStyle(fontSize: 16),
                                       ),
                                     ],
@@ -413,14 +418,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Future<void> requestBackend() async {
+  void requestBackend() async {
     setState(() {
       isLoading = true;
     });
-    final response = await ShopApi.GET('${ShopApi.USER_LIST}/2', {});
+    final response = await ShopApi.GET('${ShopApi.USER_LIST}/4', {});
     final user = User.fromJson(jsonDecode(response.toString()));
-    userModel = user;
     setState(() {
+      userModel = user;
       isLoading = false;
     });
   }

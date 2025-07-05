@@ -21,7 +21,7 @@ class SharedPrefsService {
     await prefs.setStringList(key, encodedList);
   }
 
-  Future<List<Product>> loadProductList(String key) async {
+  Future<List<Product>> getProductList(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? encodedList = prefs.getStringList(key);
     if (encodedList == null) return [];

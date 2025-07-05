@@ -1,9 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:family_shop/config/app_colors.dart';
 import 'package:family_shop/data/local/shared_prefs_service.dart';
-import 'package:family_shop/model/favorite_model.dart';
 import 'package:family_shop/model/product.dart';
 import 'package:family_shop/ui/screens/shoppingCart/shopping_cart.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class DetailScreen extends StatefulWidget {
   final Product product;
@@ -34,7 +34,10 @@ class _DetailScreenState extends State<DetailScreen> {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: Icon(size: 30, Icons.arrow_back),
+            icon: Icon(
+              Icons.arrow_back,
+              size: 30,
+            ),
           ),
         ),
         actions: [
@@ -47,7 +50,10 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
               );
             },
-            icon: Icon(size: 30, Icons.shopping_bag_outlined),
+            icon: Icon(
+              Icons.shopping_bag_outlined,
+              size: 30,
+            ),
           ),
           SizedBox(width: 18),
         ],
@@ -60,17 +66,11 @@ class _DetailScreenState extends State<DetailScreen> {
           child: Column(
             children: [
               SizedBox(height: 12),
-              Image.network(
-                widget.product.image,
+              CachedNetworkImage(
+                imageUrl: widget.product.image,
                 height: 300,
                 width: double.infinity,
                 fit: BoxFit.contain,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
               ),
               SizedBox(height: 22),
               Row(
@@ -80,7 +80,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     child: Text(
                       "\$${widget.product.price.toString()}",
                       style: TextStyle(
-                        color: Colors.greenAccent,
+                        color: AppColors.green,
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
@@ -91,40 +91,42 @@ class _DetailScreenState extends State<DetailScreen> {
                       border: Border.all(color: Colors.black),
                       borderRadius: BorderRadius.circular(50),
                     ),
-                    // child: IconButton(
-                    //   onPressed: () async {
-                    //     setState(() {
-                    //       isLiked = !isLiked;
-                      //     if (isLiked) {
-                      //       bool isExist = favoriteList.any(
-                      //         (element) => element.id == widget.product.id,
-                      //       );
-                      //       if (!isExist) {
-                      //         favoriteList.add(widget.product);
-                      //       }
-                      //     } else {
-                      //       favoriteList.removeWhere(
-                      //         (element) => element.id == widget.product.id,
-                      //       );
-                      //     }
-                      //   });
-                      //   await shared.setBoolData(
-                      //       'isLiked_${widget.product.id}', isLiked);
-                      //   await shared.saveProductList(
-                      //       'favoriteList', favoriteList);
-                      // },
-                    //   icon: isLiked
-                    //       ? Icon(
-                    //           size: 30,
-                    //           Icons.favorite,
-                    //           color: Colors.red,
-                    //         )
-                    //       : Icon(
-                    //           size: 30,
-                    //           Icons.favorite_border,
-                    //           color: Colors.grey,
-                    //         ),
-                    // ),
+                    child: IconButton(
+                      onPressed: () async {
+                        setState(() {
+                          isLiked = !isLiked;
+                        });
+                        await shared.setBoolData(
+                            'isLiked_${widget.product.id}', isLiked);
+
+                        List<Product> favoriteList =
+                            await shared.getProductList('favoriteList');
+                        if (isLiked) {
+                          bool isExist = favoriteList.any(
+                            (element) => element.id == widget.product.id,
+                          );
+                          if (!isExist) {
+                            favoriteList.add(widget.product);
+                          }
+                        } else {
+                          favoriteList.removeWhere(
+                            (element) => element.id == widget.product.id,
+                          );
+                        }
+                          await shared.saveProductList('favoriteList', favoriteList);
+                      },
+                      icon: isLiked
+                          ? Icon(
+                              Icons.favorite,
+                              color: Colors.red,
+                              size: 30,
+                            )
+                          : Icon(
+                              Icons.favorite_border,
+                              color: Colors.grey,
+                              size: 30,
+                            ),
+                    ),
                   ),
                 ],
               ),
@@ -132,7 +134,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 widget.product.title,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: AppColors.black,
                   fontSize: 20,
                 ),
               ),
@@ -163,8 +165,8 @@ class _DetailScreenState extends State<DetailScreen> {
                 height: 60,
                 child: ElevatedButton(
                   onPressed: () async {
-                    //bag.add(widget.product);
-                   // await SharedPrefsService().saveProductList('bagList', bag);
+                    //   bag.add(widget.product);
+                    //  await SharedPrefsService().saveProductList('bagList', bag);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orange,
@@ -188,18 +190,8 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   Future<void> loadLikedState() async {
-    final prefsService = SharedPrefsService();
-    isLiked =
-        await prefsService.getBoolData('isLiked_${widget.product.id}') ?? false;
-    if (isLiked) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final favoriteModel =
-            Provider.of<FavoriteModel>(context, listen: false);
-        if (!favoriteModel.favorites.contains(widget.product)) {
-          favoriteModel.add(widget.product);
-        }
-      });
-    }
+    final shared = SharedPrefsService();
+    isLiked = await shared.getBoolData('isLiked_${widget.product.id}') ?? false;
     setState(() {});
   }
 }

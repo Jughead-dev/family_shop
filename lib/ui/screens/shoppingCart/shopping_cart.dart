@@ -16,32 +16,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
   @override
   void initState() {
     super.initState();
-   // _loadBag();
   }
-
-  // Future<void> _loadBag() async {
-  //   final loadedBag = await SharedPrefsService().loadProductList('bagList');
-  //   bag
-  //     ..clear()
-  //     ..addAll(loadedBag);
-  //   cartItems.clear();
-  //   for (var i in bag) {
-  //     cartItems[i] = (cartItems[i] ?? 0) + 1;
-  //   }
-  //   setState(() {});
-  // }
-
-  // Future<void> _saveBag() async {
-  //   // cartItems ni bag ro‘yxatiga aylantirib saqlash
-  //   bag.clear();
-  //   cartItems.forEach((product, quantity) {
-  //     for (int i = 0; i < quantity; i++) {
-  //       bag.add(product);
-  //     }
-  //   });
-  //   await SharedPrefsService().saveProductList('bagList', bag);
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,7 +123,6 @@ class _ShoppingCartState extends State<ShoppingCart> {
                                             setState(() {
                                               cartItems[product] = quantity + 1;
                                             });
-                                           // await _saveBag();
                                           },
                                           icon: const Icon(
                                               Icons.add_circle_outline),
