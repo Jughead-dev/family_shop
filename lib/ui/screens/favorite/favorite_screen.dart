@@ -79,13 +79,14 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                         setState(() {});
                       },
                     ),
-                    onTap: () {
-                      Navigator.push(
+                    onTap: () async {
+                      await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (_) => DetailScreen(product: product),
                         ),
                       );
+                      await _loadFavoriteList();
                     },
                   ),
                 );

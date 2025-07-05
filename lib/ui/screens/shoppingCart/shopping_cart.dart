@@ -16,7 +16,26 @@ class _ShoppingCartState extends State<ShoppingCart> {
   @override
   void initState() {
     super.initState();
+    _getBag();
   }
+
+  Future<void> _getBag() async {
+    final shared = SharedPrefsService();
+    List<Product> bagList = await shared.getProductList('bagList');
+    List<int> bagQuantity = await shared.getIntList('bagQuantity');
+
+    Map<Product, int> tempMap = {};
+    for (int i = 0; i < bagList.length; i++) {
+      final product = bagList[i];
+      final quantity = i < bagQuantity.length ? bagQuantity[i] : 1;
+      tempMap[product] = quantity;
+    }
+
+    setState(() {
+      cartItems = tempMap;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,8 +63,8 @@ class _ShoppingCartState extends State<ShoppingCart> {
                     itemCount: cartItems.length,
                     itemBuilder: (context, index) {
                       final product = cartItems.keys.elementAt(index);
-                      final quantity = cartItems[product]!;
-                      final totalPrice = product.price * quantity;
+                      final son = cartItems[product]!;
+                      final totalPrice = product.price * son;
 
                       return Padding(
                         padding: const EdgeInsets.all(10),
@@ -60,7 +79,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                               Padding(
                                 padding: const EdgeInsets.all(10),
                                 child: CachedNetworkImage(
-                                  fit: BoxFit.cover,
+                                  fit: BoxFit.contain,
                                   height: 100,
                                   width: 100,
                                   imageUrl: product.image,
@@ -101,27 +120,37 @@ class _ShoppingCartState extends State<ShoppingCart> {
                                         IconButton(
                                           onPressed: () async {
                                             setState(() {
-                                              if (quantity > 1) {
-                                                cartItems[product] =
-                                                    quantity - 1;
+                                              if (son > 1) {
+                                                cartItems[product] = son - 1;
                                               } else {
                                                 cartItems.remove(product);
                                               }
                                             });
-                                           // await _saveBag();
+
+                                            final shared = SharedPrefsService();
+                                            List<Product> products =
+                                                cartItems.keys.toList();
+                                            List<int> quantities = products
+                                                .map((p) => cartItems[p] ?? 1)
+                                                .toList();
+
+                                            await shared.saveProductList(
+                                                'bagList', products);
+                                            await shared.saveIntList(
+                                                'bagQuantity', quantities);
                                           },
                                           icon: const Icon(
                                               Icons.remove_circle_outline),
                                           color: Colors.red,
                                         ),
                                         Text(
-                                          quantity.toString(),
+                                          son.toString(),
                                           style: const TextStyle(fontSize: 16),
                                         ),
                                         IconButton(
                                           onPressed: () async {
                                             setState(() {
-                                              cartItems[product] = quantity + 1;
+                                              cartItems[product] = son + 1;
                                             });
                                           },
                                           icon: const Icon(
@@ -187,8 +216,8 @@ class _ShoppingCartState extends State<ShoppingCart> {
 
   int getTotalItems() {
     int total = 0;
-    cartItems.forEach((_, quantity) {
-      total += quantity;
+    cartItems.forEach((_, son) {
+      total += son;
     });
     return total;
   }

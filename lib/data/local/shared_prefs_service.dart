@@ -15,10 +15,26 @@ class SharedPrefsService {
 
   Future<void> saveProductList(String key, List<Product> products) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> encodedList = products
-        .map((item) => jsonEncode(item.toJson()))
-        .toList();
+    if (products.isEmpty) {
+      await prefs.remove(key);
+      return;
+    }
+    List<String> encodedList =
+        products.map((item) => jsonEncode(item.toJson())).toList();
     await prefs.setStringList(key, encodedList);
+  }
+
+  Future<void> saveIntList(String key, List<int> intList) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> stringList = intList.map((e) => e.toString()).toList();
+    await prefs.setStringList(key, stringList);
+  }
+
+  Future<List<int>> getIntList(String key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? stringList = prefs.getStringList(key);
+    if (stringList == null) return [];
+    return stringList.map((e) => int.tryParse(e) ?? 0).toList();
   }
 
   Future<List<Product>> getProductList(String key) async {

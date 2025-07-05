@@ -113,7 +113,8 @@ class _DetailScreenState extends State<DetailScreen> {
                             (element) => element.id == widget.product.id,
                           );
                         }
-                          await shared.saveProductList('favoriteList', favoriteList);
+                        await shared.saveProductList(
+                            'favoriteList', favoriteList);
                       },
                       icon: isLiked
                           ? Icon(
@@ -165,8 +166,41 @@ class _DetailScreenState extends State<DetailScreen> {
                 height: 60,
                 child: ElevatedButton(
                   onPressed: () async {
-                    //   bag.add(widget.product);
-                    //  await SharedPrefsService().saveProductList('bagList', bag);
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Row(
+                            children: [
+                              Icon(Icons.info),
+                              Text("Mahsulot qoshildi"),
+                            ],
+                          ),
+                          showCloseIcon: true,
+                        ),
+                      );
+                    List<Product> bagList =
+                        await shared.getProductList('bagList');
+                    List<int> bagQuantity =
+                        await shared.getIntList('bagQuantity');
+
+                    int index = bagList
+                        .indexWhere((item) => item.id == widget.product.id);
+
+                    if (index != -1) {
+                      bagQuantity[index] += son;
+                    } else {
+                      bagList.add(widget.product);
+                      bagQuantity.add(son);
+                    }
+
+                    await shared.saveProductList('bagList', bagList);
+                    await shared.saveIntList('bagQuantity', bagQuantity);
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => ShoppingCart()),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orange,
