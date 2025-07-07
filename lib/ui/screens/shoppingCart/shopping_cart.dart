@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:family_shop/model/product.dart';
-import 'package:family_shop/data/local/shared_prefs_service.dart';
 import 'package:flutter/material.dart';
 
 class ShoppingCart extends StatefulWidget {
@@ -16,25 +15,9 @@ class _ShoppingCartState extends State<ShoppingCart> {
   @override
   void initState() {
     super.initState();
-    _getBag();
   }
 
-  Future<void> _getBag() async {
-    final shared = SharedPrefsService();
-    List<Product> bagList = await shared.getProductList('bagList');
-    List<int> bagQuantity = await shared.getIntList('bagQuantity');
-
-    Map<Product, int> tempMap = {};
-    for (int i = 0; i < bagList.length; i++) {
-      final product = bagList[i];
-      final quantity = i < bagQuantity.length ? bagQuantity[i] : 1;
-      tempMap[product] = quantity;
-    }
-
-    setState(() {
-      cartItems = tempMap;
-    });
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -126,18 +109,6 @@ class _ShoppingCartState extends State<ShoppingCart> {
                                                 cartItems.remove(product);
                                               }
                                             });
-
-                                            final shared = SharedPrefsService();
-                                            List<Product> products =
-                                                cartItems.keys.toList();
-                                            List<int> quantities = products
-                                                .map((p) => cartItems[p] ?? 1)
-                                                .toList();
-
-                                            await shared.saveProductList(
-                                                'bagList', products);
-                                            await shared.saveIntList(
-                                                'bagQuantity', quantities);
                                           },
                                           icon: const Icon(
                                               Icons.remove_circle_outline),

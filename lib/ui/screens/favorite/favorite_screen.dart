@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:family_shop/model/product.dart';
 import 'package:family_shop/ui/screens/detail/detail_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:family_shop/data/local/shared_prefs_service.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
@@ -16,13 +15,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   @override
   void initState() {
     super.initState();
-    _loadFavoriteList();
-  }
-
-  Future<void> _loadFavoriteList() async {
-    final prefsService = SharedPrefsService();
-    favoriteList = await prefsService.getProductList('favoriteList');
-    setState(() {});
   }
 
   @override
@@ -70,14 +62,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                     subtitle: Text("\$${product.price.toString()}"),
                     trailing: IconButton(
                       icon: Icon(Icons.delete, color: Colors.red),
-                      onPressed: () async {
-                        favoriteList.removeAt(index);
-                        await SharedPrefsService()
-                            .saveProductList('favoriteList', favoriteList);
-                        await SharedPrefsService()
-                            .setBoolData('isLiked_${product.id}', false);
-                        setState(() {});
-                      },
+                      onPressed: () async {},
                     ),
                     onTap: () async {
                       await Navigator.push(
@@ -86,7 +71,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                           builder: (_) => DetailScreen(product: product),
                         ),
                       );
-                      await _loadFavoriteList();
                     },
                   ),
                 );

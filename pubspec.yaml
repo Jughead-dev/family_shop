@@ -14,14 +14,18 @@ dependencies:
   http: ^1.4.0
   flutter_layout_grid: ^2.0.8
   cached_network_image: ^3.4.1
-  shared_preferences: ^2.5.3
   provider: ^6.0.5
   lottie: ^3.2.0
+  floor: ^1.5.0
+  flutter_bloc: ^9.1.1
+  equatable: ^2.0.7
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  floor_generator: ^1.5.0
+  build_runner: ^2.5.4
 
 flutter:
   uses-material-design: true

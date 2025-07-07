@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:family_shop/config/app_colors.dart';
-import 'package:family_shop/data/local/shared_prefs_service.dart';
 import 'package:family_shop/model/product.dart';
 import 'package:family_shop/ui/screens/shoppingCart/shopping_cart.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +15,9 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   bool isLiked = false;
   int son = 1;
-  SharedPrefsService shared = SharedPrefsService();
   @override
   void initState() {
     super.initState();
-    loadLikedState();
   }
 
   @override
@@ -96,25 +93,6 @@ class _DetailScreenState extends State<DetailScreen> {
                         setState(() {
                           isLiked = !isLiked;
                         });
-                        await shared.setBoolData(
-                            'isLiked_${widget.product.id}', isLiked);
-
-                        List<Product> favoriteList =
-                            await shared.getProductList('favoriteList');
-                        if (isLiked) {
-                          bool isExist = favoriteList.any(
-                            (element) => element.id == widget.product.id,
-                          );
-                          if (!isExist) {
-                            favoriteList.add(widget.product);
-                          }
-                        } else {
-                          favoriteList.removeWhere(
-                            (element) => element.id == widget.product.id,
-                          );
-                        }
-                        await shared.saveProductList(
-                            'favoriteList', favoriteList);
                       },
                       icon: isLiked
                           ? Icon(
@@ -179,24 +157,6 @@ class _DetailScreenState extends State<DetailScreen> {
                           showCloseIcon: true,
                         ),
                       );
-                    List<Product> bagList =
-                        await shared.getProductList('bagList');
-                    List<int> bagQuantity =
-                        await shared.getIntList('bagQuantity');
-
-                    int index = bagList
-                        .indexWhere((item) => item.id == widget.product.id);
-
-                    if (index != -1) {
-                      bagQuantity[index] += son;
-                    } else {
-                      bagList.add(widget.product);
-                      bagQuantity.add(son);
-                    }
-
-                    await shared.saveProductList('bagList', bagList);
-                    await shared.saveIntList('bagQuantity', bagQuantity);
-
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => ShoppingCart()),
@@ -221,11 +181,5 @@ class _DetailScreenState extends State<DetailScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> loadLikedState() async {
-    final shared = SharedPrefsService();
-    isLiked = await shared.getBoolData('isLiked_${widget.product.id}') ?? false;
-    setState(() {});
   }
 }

@@ -1,8 +1,13 @@
+import 'package:floor/floor.dart';
+
+@Entity(tableName: "user_table")
 class User {
+  @PrimaryKey(autoGenerate: true)
   final int id;
   final String email;
   final String username;
   final String password;
+  @ColumnInfo(name: "name")
   final Name name;
   final String phone;
   final Address address;
@@ -129,4 +134,3 @@ class Geolocation {
     };
   }
 }
-
