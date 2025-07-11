@@ -1,3 +1,9 @@
+import 'dart:convert';
+
+List<Product> userFromJson(String str) => List<Product>.from(
+      json.decode(str).map((x) => Product.fromJson(x)),
+    );
+
 class Product {
   final int id;
   final String title;

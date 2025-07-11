@@ -1,15 +1,14 @@
-import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:family_shop/bloc/home_bloc/home_cubit.dart';
+import 'package:family_shop/bloc/home_bloc/home_state.dart';
 import 'package:family_shop/config/app_assets.dart';
 import 'package:family_shop/config/app_colors.dart';
-import 'package:family_shop/data/remote/shop_api.dart';
-import 'package:family_shop/model/product.dart';
-import 'package:family_shop/model/user.dart';
 import 'package:family_shop/ui/screens/detail/detail_screen.dart';
 import 'package:family_shop/ui/screens/search/search.dart';
 import 'package:family_shop/ui/screens/shoppingCart/shopping_cart.dart';
 import 'package:family_shop/ui/screens/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Home extends StatefulWidget {
   const Home({
@@ -29,31 +28,12 @@ class _HomeState extends State<Home> {
     {"label": "Electronics", "value": "electronics"},
   ];
   String selectedCategory = "All";
-  List<Product> products = [];
-  List<User> users = [];
-  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    fetchData();
-  }
-
-  void fetchData() async {
-    await Future.wait([
-      getProduct(),
-    ]);
-    setState(() {
-      isLoading = false;
-    });
-  }
-
-  Future<void> getProduct() async {
-    String? res = await ShopApi.GET("/products", {});
-    List list = jsonDecode(res!);
-    products = list.map((e) => Product.fromJson(e)).toList();
-    setState(() {
-      isLoading = false;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      BlocProvider.of<HomeCubit>(context).getProduct();
     });
   }
 
@@ -67,8 +47,7 @@ class _HomeState extends State<Home> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => ProfileScreen()),
+              MaterialPageRoute(builder: (context) => ProfileScreen()),
             );
           },
           child: ClipRRect(
@@ -96,7 +75,10 @@ class _HomeState extends State<Home> {
                 ),
               );
             },
-            icon: Icon( Icons.content_paste_search_outlined,size: 30,),
+            icon: Icon(
+              Icons.content_paste_search_outlined,
+              size: 30,
+            ),
           ),
           SizedBox(width: 7),
           IconButton(
@@ -108,14 +90,19 @@ class _HomeState extends State<Home> {
                 ),
               );
             },
-            icon: Icon( Icons.shopping_cart_outlined,size: 30,),
+            icon: Icon(
+              Icons.shopping_cart_outlined,
+              size: 30,
+            ),
           ),
           SizedBox(width: 9),
         ],
       ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : Column(
+      body: BlocBuilder<HomeCubit, HomeState>(
+        builder: (context, state) {
+          return RefreshIndicator(
+            onRefresh: BlocProvider.of<HomeCubit>(context).refresh,
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
@@ -172,8 +159,8 @@ class _HomeState extends State<Home> {
                 Expanded(
                   child: Builder(builder: (context) {
                     final filteredProducts = selectedCategory == "All"
-                        ? products
-                        : products
+                        ? state.products
+                        : state.products
                             .where((p) => p.category == selectedCategory)
                             .toList();
                     return GridView.builder(
@@ -212,7 +199,7 @@ class _HomeState extends State<Home> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                               CachedNetworkImage(
+                                CachedNetworkImage(
                                   imageUrl: product.image,
                                   height: 100,
                                   width: 100,
@@ -243,6 +230,9 @@ class _HomeState extends State<Home> {
                 ),
               ],
             ),
+          );
+        },
+      ),
     );
   }
 }

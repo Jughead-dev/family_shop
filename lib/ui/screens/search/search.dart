@@ -38,7 +38,10 @@ class _SearchState extends State<Search> {
                   context,
                 );
               },
-              icon: Icon(size: 30, Icons.arrow_back_ios)),
+              icon: Icon(
+                Icons.arrow_back_ios,
+                size: 30,
+              )),
         ),
         title: Text(
           'Search',
@@ -57,7 +60,10 @@ class _SearchState extends State<Search> {
                   ),
                 );
               },
-              icon: Icon(size: 30, Icons.shopping_cart),
+              icon: Icon(
+                Icons.shopping_cart_outlined,
+                size: 30,
+              ),
             ),
           ),
         ],
@@ -130,7 +136,7 @@ class _SearchState extends State<Search> {
     setState(() {
       isLoading = false;
     });
-    }
+  }
 
   void filterSearchResults(String query) {
     List<Product> dummySearchList = [];
