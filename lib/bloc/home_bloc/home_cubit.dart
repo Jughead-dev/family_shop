@@ -9,7 +9,7 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> getProduct() async {
     var res = await ShopApi.GET(ShopApi.PRODUCTS_LIST, {});
     if (res != null) {
-      final newProduct = userFromJson(res);
+      final newProduct = productsFromJson(res);
       emit(state.copyWith(products: newProduct, isLoading: false));
     } else {
       emit(state.copyWith(isLoading: false));
@@ -29,7 +29,7 @@ class HomeCubit extends Cubit<HomeState> {
     final respone = await ShopApi.GET(ShopApi.PRODUCTS_LIST, {});
 
     if (respone != null) {
-      final newProduct = userFromJson(respone);
+      final newProduct = productsFromJson(respone);
       state.products.clear();
       emit(state.copyWith(products: newProduct, isLoading: false));
     } else {

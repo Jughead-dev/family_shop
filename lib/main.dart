@@ -1,5 +1,6 @@
 import 'package:family_shop/bloc/bag_bloc/bag_cubit.dart';
 import 'package:family_shop/bloc/detail_bloc/detail_cubit.dart';
+import 'package:family_shop/bloc/favorite_bloc/favorite_cubit.dart';
 import 'package:family_shop/bloc/home_bloc/home_cubit.dart';
 import 'package:family_shop/model/favorite_model.dart';
 import 'package:family_shop/ui/screens/splash/splash_screen.dart';
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<HomeCubit>(create: (_) => HomeCubit()),
         BlocProvider<BagCubit>(create: (_) => BagCubit()),
         BlocProvider<DetailCubit>(create: (_) => DetailCubit()),
+         BlocProvider<FavoriteCubit>(create: (_) => FavoriteCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
