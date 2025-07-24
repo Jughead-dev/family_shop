@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'package:family_shop/model/user.dart';
-import 'package:family_shop/ui/screens/edit/edit_screen.dart';
-import 'package:family_shop/ui/screens/favorite/favorite_screen.dart';
-import 'package:family_shop/ui/screens/shoppingCart/shopping_cart.dart';
-import 'package:family_shop/data/remote/shop_api.dart';
 import 'package:flutter/material.dart';
+import 'package:oila_market/data/remote/shop_api.dart';
+import 'package:oila_market/model/user.dart';
+import 'package:oila_market/ui/screens/edit/edit_screen.dart';
+import 'package:oila_market/ui/screens/favorite/favorite_screen.dart';
+import 'package:oila_market/ui/screens/shoppingCart/shopping_cart.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
@@ -308,7 +308,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                       SizedBox(height: 5),
                                       Text(
-                                        "Address: ${userModel?.address.city}",
+                                        "Address: ${userModel?.address}",
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       SizedBox(height: 5),

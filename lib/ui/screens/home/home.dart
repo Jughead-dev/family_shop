@@ -1,14 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:family_shop/bloc/home_bloc/home_cubit.dart';
-import 'package:family_shop/bloc/home_bloc/home_state.dart';
-import 'package:family_shop/config/app_assets.dart';
-import 'package:family_shop/config/app_colors.dart';
-import 'package:family_shop/ui/screens/detail/detail_screen.dart';
-import 'package:family_shop/ui/screens/search/search.dart';
-import 'package:family_shop/ui/screens/shoppingCart/shopping_cart.dart';
-import 'package:family_shop/ui/screens/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oila_market/bloc/home_bloc/home_cubit.dart';
+import 'package:oila_market/bloc/home_bloc/home_state.dart';
+import 'package:oila_market/config/app_assets.dart';
+import 'package:oila_market/config/app_colors.dart';
+import 'package:oila_market/ui/screens/detail/detail_screen.dart';
+import 'package:oila_market/ui/screens/profile/profile_screen.dart';
+import 'package:oila_market/ui/screens/search/search.dart';
+import 'package:oila_market/ui/screens/shoppingCart/shopping_cart.dart';
 
 class Home extends StatefulWidget {
   const Home({

@@ -1,7 +1,7 @@
-import 'package:family_shop/bloc/home_bloc/home_state.dart';
-import 'package:family_shop/data/remote/shop_api.dart';
-import 'package:family_shop/model/product.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oila_market/bloc/home_bloc/home_state.dart';
+import 'package:oila_market/data/remote/shop_api.dart';
+import 'package:oila_market/model/product.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeState());

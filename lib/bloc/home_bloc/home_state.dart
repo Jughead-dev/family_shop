@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:family_shop/model/product.dart';
+import 'package:oila_market/model/product.dart';
 
 class HomeState extends Equatable {
   final List<Product> products;

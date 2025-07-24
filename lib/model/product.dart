@@ -1,9 +1,9 @@
+
 import 'dart:convert';
 
 List<Product> productsFromJson(String str) => List<Product>.from(
-      json.decode(str).map((x) => Product.fromJson(x)),
-    );
-
+  json.decode(str).map((x) => Product.fromJson(x)),
+);
 class Product {
   final int id;
   final String title;
@@ -11,7 +11,8 @@ class Product {
   final String description;
   final String category;
   final String image;
-  int count;
+  final int count;
+
   Product({
     required this.id,
     required this.title,
@@ -22,17 +23,6 @@ class Product {
     this.count = 1,
   });
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'price': price,
-      'description': description,
-      'category': category,
-      'image': image,
-    };
-  }
-
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
       id: json['id'],
@@ -41,8 +31,40 @@ class Product {
       description: json['description'],
       category: json['category'],
       image: json['image'],
+      count: json['count'] ?? 1,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'price': price,
+        'description': description,
+        'category': category,
+        'image': image,
+        'count': count, 
+      };
+
+  Product copyWith({
+    int? id,
+    String? title,
+    double? price,
+    String? description,
+    String? category,
+    String? image,
+    int? count,
+  }) {
+    return Product(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      price: price ?? this.price,
+      description: description ?? this.description,
+      category: category ?? this.category,
+      image: image ?? this.image,
+      count: count ?? this.count,
+    );
+  }
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

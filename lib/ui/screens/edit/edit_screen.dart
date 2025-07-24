@@ -1,5 +1,5 @@
-import 'package:family_shop/model/user.dart';
 import 'package:flutter/material.dart';
+import 'package:oila_market/model/user.dart';
 
 class EditScreen extends StatefulWidget {
   final User user;

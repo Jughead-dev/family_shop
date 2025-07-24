@@ -1,8 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:family_shop/config/app_colors.dart';
-import 'package:family_shop/model/product.dart';
-import 'package:family_shop/ui/screens/shoppingCart/shopping_cart.dart';
 import 'package:flutter/material.dart';
+import 'package:oila_market/bloc/favorite_bloc/favorite_cubit.dart';
+import 'package:oila_market/bloc/favorite_bloc/favorite_state.dart';
+import 'package:oila_market/config/app_colors.dart';
+import 'package:oila_market/model/product.dart';
+import 'package:oila_market/ui/screens/shoppingCart/shopping_cart.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oila_market/bloc/bag_bloc/bag_cubit.dart';
 
 class DetailScreen extends StatefulWidget {
   final Product product;
@@ -13,8 +17,6 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  bool isLiked = false;
-  int son = 1;
   @override
   void initState() {
     super.initState();
@@ -88,24 +90,36 @@ class _DetailScreenState extends State<DetailScreen> {
                       border: Border.all(color: Colors.black),
                       borderRadius: BorderRadius.circular(50),
                     ),
-                    child: IconButton(
-                      onPressed: () async {
-                        setState(() {
-                          isLiked = !isLiked;
-                        });
-                      },
-                      icon: isLiked
-                          ? Icon(
-                              Icons.favorite,
-                              color: Colors.red,
-                              size: 30,
-                            )
-                          : Icon(
-                              Icons.favorite_border,
-                              color: Colors.grey,
-                              size: 30,
-                            ),
-                    ),
+                    child: BlocBuilder<FavoriteCubit, FavoriteState>(
+                        builder: (context, state) {
+                      return IconButton(
+                        onPressed: () {
+                          if (context
+                              .read<FavoriteCubit>()
+                              .isFavorite(widget.product)) {
+                            context
+                                .read<FavoriteCubit>()
+                                .removeFavorites(widget.product);
+                          } else {
+                            context
+                                .read<FavoriteCubit>()
+                                .addToFavorites(widget.product);
+                          }
+                        },
+                        icon: Icon(
+                          context
+                                  .read<FavoriteCubit>()
+                                  .isFavorite(widget.product)
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: context
+                                  .read<FavoriteCubit>()
+                                  .isFavorite(widget.product)
+                              ? Colors.red
+                              : Colors.grey,
+                        ),
+                      );
+                    }),
                   ),
                 ],
               ),
@@ -144,6 +158,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 height: 60,
                 child: ElevatedButton(
                   onPressed: () async {
+                    context.read<BagCubit>().addToBag(widget.product);
                     ScaffoldMessenger.of(context)
                       ..hideCurrentSnackBar()
                       ..showSnackBar(

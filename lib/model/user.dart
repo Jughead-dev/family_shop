@@ -8,9 +8,9 @@ class User {
   final String username;
   final String password;
   @ColumnInfo(name: "name")
-  final Name name;
+  final String name;
   final String phone;
-  final Address address;
+  final String address;
   final int v;
 
   User({
@@ -30,9 +30,9 @@ class User {
       email: json['email'],
       username: json['username'],
       password: json['password'],
-      name: Name.fromJson(json['name']),
+      name: json['name'],
       phone: json['phone'],
-      address: Address.fromJson(json['address']),
+      address: json['address'],
       v: json['__v'],
     );
   }
@@ -43,9 +43,9 @@ class User {
       'email': email,
       'username': username,
       'password': password,
-      'name': name.toJson(),
+      'name': name,
       'phone': phone,
-      'address': address.toJson(),
+      'address': address,
       '__v': v,
     };
   }

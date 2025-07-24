@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:family_shop/model/product.dart';
-import 'package:family_shop/ui/screens/detail/detail_screen.dart';
-import 'package:family_shop/ui/screens/shoppingCart/shopping_cart.dart';
-import 'package:family_shop/data/remote/shop_api.dart';
 import 'package:flutter/material.dart';
+import 'package:oila_market/data/remote/shop_api.dart';
+import 'package:oila_market/model/product.dart';
+import 'package:oila_market/ui/screens/detail/detail_screen.dart';
+import 'package:oila_market/ui/screens/shoppingCart/shopping_cart.dart';
 
 class Search extends StatefulWidget {
   const Search({super.key});
