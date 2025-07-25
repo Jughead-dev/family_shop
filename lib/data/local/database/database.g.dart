@@ -72,7 +72,9 @@ class _$AppDatabase extends AppDatabase {
     changeListener = listener ?? StreamController<String>.broadcast();
   }
 
-  UserDao? _userDaoInstance;
+  ProductDao? _productDaoInstance;
+
+  LikeDao? _likeDaoInstance;
 
   Future<sqflite.Database> open(
     String path,
@@ -96,7 +98,9 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `user_table` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `email` TEXT NOT NULL, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `name` TEXT NOT NULL, `phone` TEXT NOT NULL, `address` TEXT NOT NULL, `v` INTEGER NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `product_table` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `price` REAL NOT NULL, `description` TEXT NOT NULL, `category` TEXT NOT NULL, `image` TEXT NOT NULL, `count` INTEGER NOT NULL)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `like_table` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `productId` INTEGER NOT NULL, `isLiked` INTEGER NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -105,42 +109,45 @@ class _$AppDatabase extends AppDatabase {
   }
 
   @override
-  UserDao get userDao {
-    return _userDaoInstance ??= _$UserDao(database, changeListener);
+  ProductDao get productDao {
+    return _productDaoInstance ??= _$ProductDao(database, changeListener);
+  }
+
+  @override
+  LikeDao get likeDao {
+    return _likeDaoInstance ??= _$LikeDao(database, changeListener);
   }
 }
 
-class _$UserDao extends UserDao {
-  _$UserDao(
+class _$ProductDao extends ProductDao {
+  _$ProductDao(
     this.database,
     this.changeListener,
   )   : _queryAdapter = QueryAdapter(database),
-        _userInsertionAdapter = InsertionAdapter(
+        _productInsertionAdapter = InsertionAdapter(
             database,
-            'user_table',
-            (User item) => <String, Object?>{
+            'product_table',
+            (Product item) => <String, Object?>{
                   'id': item.id,
-                  'email': item.email,
-                  'username': item.username,
-                  'password': item.password,
-                  'name': item.name,
-                  'phone': item.phone,
-                  'address': item.address,
-                  'v': item.v
+                  'title': item.title,
+                  'price': item.price,
+                  'description': item.description,
+                  'category': item.category,
+                  'image': item.image,
+                  'count': item.count
                 }),
-        _userDeletionAdapter = DeletionAdapter(
+        _productDeletionAdapter = DeletionAdapter(
             database,
-            'user_table',
+            'product_table',
             ['id'],
-            (User item) => <String, Object?>{
+            (Product item) => <String, Object?>{
                   'id': item.id,
-                  'email': item.email,
-                  'username': item.username,
-                  'password': item.password,
-                  'name': item.name,
-                  'phone': item.phone,
-                  'address': item.address,
-                  'v': item.v
+                  'title': item.title,
+                  'price': item.price,
+                  'description': item.description,
+                  'category': item.category,
+                  'image': item.image,
+                  'count': item.count
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -149,51 +156,113 @@ class _$UserDao extends UserDao {
 
   final QueryAdapter _queryAdapter;
 
-  final InsertionAdapter<User> _userInsertionAdapter;
+  final InsertionAdapter<Product> _productInsertionAdapter;
 
-  final DeletionAdapter<User> _userDeletionAdapter;
+  final DeletionAdapter<Product> _productDeletionAdapter;
 
   @override
-  Future<User?> getUserById(int id) async {
-    return _queryAdapter.query('SELECT * FROM user_table WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => User(
-            id: row['id'] as int,
-            email: row['email'] as String,
-            username: row['username'] as String,
-            password: row['password'] as String,
-            name: row['name'] as String,
-            phone: row['phone'] as String,
-            address: row['address'] as String,
-            v: row['v'] as int),
+  Future<Product?> getProductById(int id) async {
+    return _queryAdapter.query('SELECT * FROM product_table WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => Product(
+            id: row['id'] as int?,
+            title: row['title'] as String,
+            price: row['price'] as double,
+            description: row['description'] as String,
+            category: row['category'] as String,
+            image: row['image'] as String,
+            count: row['count'] as int),
         arguments: [id]);
   }
 
   @override
-  Future<List<User>> getAllUser() async {
-    return _queryAdapter.queryList('SELECT * FROM user_table',
-        mapper: (Map<String, Object?> row) => User(
-            id: row['id'] as int,
-            email: row['email'] as String,
-            username: row['username'] as String,
-            password: row['password'] as String,
-            name: row['name'] as String,
-            phone: row['phone'] as String,
-            address: row['address'] as String,
-            v: row['v'] as int));
+  Future<List<Product>> getAllProduct() async {
+    return _queryAdapter.queryList('SELECT * FROM product_table',
+        mapper: (Map<String, Object?> row) => Product(
+            id: row['id'] as int?,
+            title: row['title'] as String,
+            price: row['price'] as double,
+            description: row['description'] as String,
+            category: row['category'] as String,
+            image: row['image'] as String,
+            count: row['count'] as int));
   }
 
   @override
   Future<void> clear() async {
-    await _queryAdapter.queryNoReturn('DELETE FROM user_table');
+    await _queryAdapter.queryNoReturn('DELETE FROM product_table');
   }
 
   @override
-  Future<void> saveUser(User user) async {
-    await _userInsertionAdapter.insert(user, OnConflictStrategy.replace);
+  Future<void> saveProduct(Product product) async {
+    await _productInsertionAdapter.insert(product, OnConflictStrategy.replace);
   }
 
   @override
-  Future<void> deleteUser(User user) async {
-    await _userDeletionAdapter.delete(user);
+  Future<void> deleteProduct(Product product) async {
+    await _productDeletionAdapter.delete(product);
+  }
+}
+
+class _$LikeDao extends LikeDao {
+  _$LikeDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _likeInsertionAdapter = InsertionAdapter(
+            database,
+            'like_table',
+            (Like item) => <String, Object?>{
+                  'id': item.id,
+                  'productId': item.productId,
+                  'isLiked': item.isLiked ? 1 : 0
+                }),
+        _likeDeletionAdapter = DeletionAdapter(
+            database,
+            'like_table',
+            ['id'],
+            (Like item) => <String, Object?>{
+                  'id': item.id,
+                  'productId': item.productId,
+                  'isLiked': item.isLiked ? 1 : 0
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Like> _likeInsertionAdapter;
+
+  final DeletionAdapter<Like> _likeDeletionAdapter;
+
+  @override
+  Future<Like?> getLikeByProductId(int productId) async {
+    return _queryAdapter.query(
+        'SELECT * FROM like_table WHERE productId = ?1 LIMIT 1',
+        mapper: (Map<String, Object?> row) => Like(
+            id: row['id'] as int,
+            productId: row['productId'] as int,
+            isLiked: (row['isLiked'] as int) != 0),
+        arguments: [productId]);
+  }
+
+  @override
+  Future<List<Like>> getAllLikes() async {
+    return _queryAdapter.queryList('SELECT * FROM like_table',
+        mapper: (Map<String, Object?> row) => Like(
+            id: row['id'] as int,
+            productId: row['productId'] as int,
+            isLiked: (row['isLiked'] as int) != 0));
+  }
+
+  @override
+  Future<void> saveLike(Like like) async {
+    await _likeInsertionAdapter.insert(like, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> deleteLike(Like like) async {
+    await _likeDeletionAdapter.delete(like);
   }
 }

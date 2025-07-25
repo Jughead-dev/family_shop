@@ -1,3 +1,4 @@
 {
-    "githubPullRequests.experimental.useQuickChat": false
+    "githubPullRequests.experimental.useQuickChat": false,
+    "cmake.sourceDirectory": "C:/Users/user/family_shop/linux"
 }

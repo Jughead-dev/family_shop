@@ -1,11 +1,15 @@
-
 import 'dart:convert';
 
+import 'package:floor/floor.dart';
+
 List<Product> productsFromJson(String str) => List<Product>.from(
-  json.decode(str).map((x) => Product.fromJson(x)),
-);
+      json.decode(str).map((x) => Product.fromJson(x)),
+    );
+
+@Entity(tableName: "product_table")
 class Product {
-  final int id;
+  @PrimaryKey(autoGenerate: true)
+  final int? id;
   final String title;
   final double price;
   final String description;
@@ -42,7 +46,7 @@ class Product {
         'description': description,
         'category': category,
         'image': image,
-        'count': count, 
+        'count': count,
       };
 
   Product copyWith({
