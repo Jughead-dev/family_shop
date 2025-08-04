@@ -14,40 +14,60 @@ class BagCubit extends Cubit<BagState> {
   }
 
   int getTotalItems() {
-    int total = 0;
-    for (var product in state.bagList) {
-      total += product.count;
-    }
-    return total;
+    return state.bagList.length;
   }
 
   void addToBag(Product product) {
-    final updatedList = List<Product>.from(state.bagList);
-    final index = updatedList.indexWhere((item) => item.id == product.id);
+    final List<Product> updatedList = List<Product>.from(state.bagList);
+    final index = updatedList.indexWhere((p) => p.id == product.id);
 
     if (index != -1) {
-      updatedList[index] =
-          updatedList[index].copyWith(count: updatedList[index].count + 1);
+      final updatedProduct = updatedList[index].copyWith(
+        count: updatedList[index].count + 1,
+      );
+      updatedList[index] = updatedProduct;
+      print('Yangilandi: $updatedProduct');
     } else {
-      updatedList.add(product);
+      final newProduct = product.copyWith(count: 1);
+      updatedList.add(newProduct);
+      print('Yangi qo‘shildi: $newProduct');
     }
 
     emit(state.copyWith(bagList: updatedList));
   }
+  // void addToBag(Product product) {
+  //   List<Product> list = List.from(state.bagList);
+  //   bool found = false;
+
+  //   for (int i = 0; i < list.length; i++) {
+  //     if (list[i].id == product.id) {
+  //       list[i] = list[i].copyWith(count: list[i].count + 1);
+  //       print("Yangilandi: ${list[i]}");
+  //       found = true;
+  //       break;
+  //     }
+  //   }
+
+  //   if (!found) {
+  //     list.add(product.copyWith(count: 1));
+  //     print("Yangi qo‘shildi: ${product.copyWith(count: 1)}");
+  //   }
+
+  //   emit(state.copyWith(bagList: list));
+  // }
 
   void removeFromBag(Product product) {
-    final updatedList = List<Product>.from(state.bagList);
-    final index = updatedList.indexWhere((item) => item.id == product.id);
-
-    if (index != -1) {
-      if (updatedList[index].count > 1) {
-        updatedList[index] =
-            updatedList[index].copyWith(count: updatedList[index].count - 1);
-      } else {
-        updatedList.removeAt(index);
+    List<Product> list = List.from(state.bagList);
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].id == product.id) {
+        if (list[i].count > 1) {
+          list[i] = list[i].copyWith(count: list[i].count - 1);
+        } else {
+          list.removeAt(i);
+        }
+        break;
       }
     }
-
-    emit(state.copyWith(bagList: updatedList));
+    emit(state.copyWith(bagList: list));
   }
 }

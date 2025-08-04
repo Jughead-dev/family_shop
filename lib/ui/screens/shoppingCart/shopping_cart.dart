@@ -47,7 +47,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
               child: ListView.builder(
                 itemCount: cartItems.length,
                 itemBuilder: (context, index) {
-                  final product = cartItems[index];
+                  final product = state.bagList[index];
                   return Padding(
                     padding: const EdgeInsets.all(10),
                     child: Container(
@@ -90,7 +90,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  "\$${product.price.toStringAsFixed(2)} each",
+                                  "\$${product.price.toString()}",
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey[700],
@@ -101,8 +101,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                                   children: [
                                     IconButton(
                                       onPressed: () {
-                                        context
-                                            .read<BagCubit>()
+                                        BlocProvider.of<BagCubit>(context)
                                             .removeFromBag(product);
                                       },
                                       icon: const Icon(
@@ -115,8 +114,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                                     ),
                                     IconButton(
                                       onPressed: () {
-                                        context
-                                            .read<BagCubit>()
+                                        BlocProvider.of<BagCubit>(context)
                                             .addToBag(product);
                                       },
                                       icon:
@@ -147,7 +145,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
               padding: const EdgeInsets.all(12),
               color: Colors.grey[100],
               child: BlocBuilder<BagCubit, BagState>(builder: (context, state) {
-                final cubit = context.read<BagCubit>();
+                final cubit = BlocProvider.of<BagCubit>(context);
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

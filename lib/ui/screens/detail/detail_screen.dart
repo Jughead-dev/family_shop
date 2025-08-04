@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:oila_market/bloc/favorite_bloc/favorite_cubit.dart';
 import 'package:oila_market/bloc/favorite_bloc/favorite_state.dart';
 import 'package:oila_market/config/app_colors.dart';
-import 'package:oila_market/model/favorite_model.dart';
 import 'package:oila_market/model/product.dart';
 import 'package:oila_market/ui/screens/shoppingCart/shopping_cart.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -94,24 +93,11 @@ class _DetailScreenState extends State<DetailScreen> {
                     child: BlocBuilder<FavoriteCubit, FavoriteState>(
                         builder: (context, state) {
                       return IconButton(
-                        onPressed: () {
-                          final favoriteModel = context.read<FavoriteModel>();
-
-                          favoriteModel.toggleFavorite(widget.product);
-                        },
-                        icon: Icon(
-                          context
-                                  .read<FavoriteModel>()
-                                  .isFavorite(widget.product)
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color: context
-                                  .read<FavoriteModel>()
-                                  .isFavorite(widget.product)
-                              ? Colors.red
-                              : Colors.grey,
-                        ),
-                      );
+                          onPressed: () {},
+                          icon: widget.product.isLiked
+                              ? Icon(Icons.favorite, color: Colors.red)
+                              : Icon(Icons.favorite_border,
+                                  color: Colors.black));
                     }),
                   ),
                 ],
@@ -151,7 +137,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 height: 60,
                 child: ElevatedButton(
                   onPressed: () async {
-                    context.read<BagCubit>().addToBag(widget.product);
+                    BlocProvider.of<BagCubit>(context).addToBag(widget.product);
                     ScaffoldMessenger.of(context)
                       ..hideCurrentSnackBar()
                       ..showSnackBar(

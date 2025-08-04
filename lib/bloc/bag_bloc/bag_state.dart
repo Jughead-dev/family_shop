@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:oila_market/model/product.dart';
+
 class BagState extends Equatable {
   final bool isEmpty;
   final bool isLoading;
@@ -28,5 +29,5 @@ class BagState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [isEmpty, bagList, allProduct];
+  List<Object?> get props => [isEmpty, isLoading, bagList, allProduct];
 }

@@ -30,9 +30,9 @@ class User {
       email: json['email'],
       username: json['username'],
       password: json['password'],
-      name: json['name'],
+      name: json['name'].toString(),
       phone: json['phone'],
-      address: json['address'],
+      address: json['address'].toString(),
       v: json['__v'],
     );
   }

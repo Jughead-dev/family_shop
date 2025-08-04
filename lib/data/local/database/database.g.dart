@@ -72,9 +72,9 @@ class _$AppDatabase extends AppDatabase {
     changeListener = listener ?? StreamController<String>.broadcast();
   }
 
-  ProductDao? _productDaoInstance;
+  BagDao? _bagDaoInstance;
 
-  LikeDao? _likeDaoInstance;
+  FavoriteDao? _favoriteDaoInstance;
 
   Future<sqflite.Database> open(
     String path,
@@ -98,9 +98,9 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `product_table` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `price` REAL NOT NULL, `description` TEXT NOT NULL, `category` TEXT NOT NULL, `image` TEXT NOT NULL, `count` INTEGER NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `bag_entity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `price` REAL NOT NULL, `description` TEXT NOT NULL, `category` TEXT NOT NULL, `image` TEXT NOT NULL, `count` INTEGER NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `like_table` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `productId` INTEGER NOT NULL, `isLiked` INTEGER NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `favorites` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `price` REAL NOT NULL, `description` TEXT NOT NULL, `category` TEXT NOT NULL, `image` TEXT NOT NULL, `count` INTEGER NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -109,25 +109,25 @@ class _$AppDatabase extends AppDatabase {
   }
 
   @override
-  ProductDao get productDao {
-    return _productDaoInstance ??= _$ProductDao(database, changeListener);
+  BagDao get bagDao {
+    return _bagDaoInstance ??= _$BagDao(database, changeListener);
   }
 
   @override
-  LikeDao get likeDao {
-    return _likeDaoInstance ??= _$LikeDao(database, changeListener);
+  FavoriteDao get favoriteDao {
+    return _favoriteDaoInstance ??= _$FavoriteDao(database, changeListener);
   }
 }
 
-class _$ProductDao extends ProductDao {
-  _$ProductDao(
+class _$BagDao extends BagDao {
+  _$BagDao(
     this.database,
     this.changeListener,
   )   : _queryAdapter = QueryAdapter(database),
-        _productInsertionAdapter = InsertionAdapter(
+        _bagEntityInsertionAdapter = InsertionAdapter(
             database,
-            'product_table',
-            (Product item) => <String, Object?>{
+            'bag_entity',
+            (BagEntity item) => <String, Object?>{
                   'id': item.id,
                   'title': item.title,
                   'price': item.price,
@@ -136,11 +136,11 @@ class _$ProductDao extends ProductDao {
                   'image': item.image,
                   'count': item.count
                 }),
-        _productDeletionAdapter = DeletionAdapter(
+        _bagEntityDeletionAdapter = DeletionAdapter(
             database,
-            'product_table',
+            'bag_entity',
             ['id'],
-            (Product item) => <String, Object?>{
+            (BagEntity item) => <String, Object?>{
                   'id': item.id,
                   'title': item.title,
                   'price': item.price,
@@ -156,14 +156,14 @@ class _$ProductDao extends ProductDao {
 
   final QueryAdapter _queryAdapter;
 
-  final InsertionAdapter<Product> _productInsertionAdapter;
+  final InsertionAdapter<BagEntity> _bagEntityInsertionAdapter;
 
-  final DeletionAdapter<Product> _productDeletionAdapter;
+  final DeletionAdapter<BagEntity> _bagEntityDeletionAdapter;
 
   @override
-  Future<Product?> getProductById(int id) async {
-    return _queryAdapter.query('SELECT * FROM product_table WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Product(
+  Future<BagEntity?> getBagById(int id) async {
+    return _queryAdapter.query('SELECT * FROM bag_entity WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => BagEntity(
             id: row['id'] as int?,
             title: row['title'] as String,
             price: row['price'] as double,
@@ -175,9 +175,9 @@ class _$ProductDao extends ProductDao {
   }
 
   @override
-  Future<List<Product>> getAllProduct() async {
-    return _queryAdapter.queryList('SELECT * FROM product_table',
-        mapper: (Map<String, Object?> row) => Product(
+  Future<List<BagEntity>> getAllBag() async {
+    return _queryAdapter.queryList('SELECT * FROM bag_entity',
+        mapper: (Map<String, Object?> row) => BagEntity(
             id: row['id'] as int?,
             title: row['title'] as String,
             price: row['price'] as double,
@@ -189,41 +189,49 @@ class _$ProductDao extends ProductDao {
 
   @override
   Future<void> clear() async {
-    await _queryAdapter.queryNoReturn('DELETE FROM product_table');
+    await _queryAdapter.queryNoReturn('DELETE FROM bag_entity');
   }
 
   @override
-  Future<void> saveProduct(Product product) async {
-    await _productInsertionAdapter.insert(product, OnConflictStrategy.replace);
+  Future<void> saveBag(BagEntity bag) async {
+    await _bagEntityInsertionAdapter.insert(bag, OnConflictStrategy.replace);
   }
 
   @override
-  Future<void> deleteProduct(Product product) async {
-    await _productDeletionAdapter.delete(product);
+  Future<void> deleteBag(BagEntity bag) async {
+    await _bagEntityDeletionAdapter.delete(bag);
   }
 }
 
-class _$LikeDao extends LikeDao {
-  _$LikeDao(
+class _$FavoriteDao extends FavoriteDao {
+  _$FavoriteDao(
     this.database,
     this.changeListener,
   )   : _queryAdapter = QueryAdapter(database),
-        _likeInsertionAdapter = InsertionAdapter(
+        _favoriteEntityInsertionAdapter = InsertionAdapter(
             database,
-            'like_table',
-            (Like item) => <String, Object?>{
+            'favorites',
+            (FavoriteEntity item) => <String, Object?>{
                   'id': item.id,
-                  'productId': item.productId,
-                  'isLiked': item.isLiked ? 1 : 0
+                  'title': item.title,
+                  'price': item.price,
+                  'description': item.description,
+                  'category': item.category,
+                  'image': item.image,
+                  'count': item.count
                 }),
-        _likeDeletionAdapter = DeletionAdapter(
+        _favoriteEntityDeletionAdapter = DeletionAdapter(
             database,
-            'like_table',
+            'favorites',
             ['id'],
-            (Like item) => <String, Object?>{
+            (FavoriteEntity item) => <String, Object?>{
                   'id': item.id,
-                  'productId': item.productId,
-                  'isLiked': item.isLiked ? 1 : 0
+                  'title': item.title,
+                  'price': item.price,
+                  'description': item.description,
+                  'category': item.category,
+                  'image': item.image,
+                  'count': item.count
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -232,37 +240,50 @@ class _$LikeDao extends LikeDao {
 
   final QueryAdapter _queryAdapter;
 
-  final InsertionAdapter<Like> _likeInsertionAdapter;
+  final InsertionAdapter<FavoriteEntity> _favoriteEntityInsertionAdapter;
 
-  final DeletionAdapter<Like> _likeDeletionAdapter;
+  final DeletionAdapter<FavoriteEntity> _favoriteEntityDeletionAdapter;
 
   @override
-  Future<Like?> getLikeByProductId(int productId) async {
-    return _queryAdapter.query(
-        'SELECT * FROM like_table WHERE productId = ?1 LIMIT 1',
-        mapper: (Map<String, Object?> row) => Like(
-            id: row['id'] as int,
-            productId: row['productId'] as int,
-            isLiked: (row['isLiked'] as int) != 0),
-        arguments: [productId]);
+  Future<FavoriteEntity?> getFavoriteById(int id) async {
+    return _queryAdapter.query('SELECT * FROM favorites WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => FavoriteEntity(
+            id: row['id'] as int?,
+            title: row['title'] as String,
+            price: row['price'] as double,
+            description: row['description'] as String,
+            category: row['category'] as String,
+            image: row['image'] as String,
+            count: row['count'] as int),
+        arguments: [id]);
   }
 
   @override
-  Future<List<Like>> getAllLikes() async {
-    return _queryAdapter.queryList('SELECT * FROM like_table',
-        mapper: (Map<String, Object?> row) => Like(
-            id: row['id'] as int,
-            productId: row['productId'] as int,
-            isLiked: (row['isLiked'] as int) != 0));
+  Future<List<FavoriteEntity>> getAllFavorite() async {
+    return _queryAdapter.queryList('SELECT * FROM favorites',
+        mapper: (Map<String, Object?> row) => FavoriteEntity(
+            id: row['id'] as int?,
+            title: row['title'] as String,
+            price: row['price'] as double,
+            description: row['description'] as String,
+            category: row['category'] as String,
+            image: row['image'] as String,
+            count: row['count'] as int));
   }
 
   @override
-  Future<void> saveLike(Like like) async {
-    await _likeInsertionAdapter.insert(like, OnConflictStrategy.replace);
+  Future<void> clear() async {
+    await _queryAdapter.queryNoReturn('DELETE FROM favorites');
   }
 
   @override
-  Future<void> deleteLike(Like like) async {
-    await _likeDeletionAdapter.delete(like);
+  Future<void> saveProduct(FavoriteEntity favorite) async {
+    await _favoriteEntityInsertionAdapter.insert(
+        favorite, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> deleteFavorite(FavoriteEntity favorite) async {
+    await _favoriteEntityDeletionAdapter.delete(favorite);
   }
 }

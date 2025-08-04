@@ -1,14 +1,12 @@
 import 'dart:convert';
 
-import 'package:floor/floor.dart';
+import 'package:equatable/equatable.dart';
 
 List<Product> productsFromJson(String str) => List<Product>.from(
       json.decode(str).map((x) => Product.fromJson(x)),
     );
 
-@Entity(tableName: "product_table")
-class Product {
-  @PrimaryKey(autoGenerate: true)
+class Product extends Equatable {
   final int? id;
   final String title;
   final double price;
@@ -16,6 +14,7 @@ class Product {
   final String category;
   final String image;
   final int count;
+  final bool isLiked;
 
   Product({
     required this.id,
@@ -25,6 +24,7 @@ class Product {
     required this.category,
     required this.image,
     this.count = 1,
+    this.isLiked = false,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -36,6 +36,7 @@ class Product {
       category: json['category'],
       image: json['image'],
       count: json['count'] ?? 1,
+      isLiked: json['isLiked'] ?? false,
     );
   }
 
@@ -47,6 +48,7 @@ class Product {
         'category': category,
         'image': image,
         'count': count,
+        'isLiked': isLiked,
       };
 
   Product copyWith({
@@ -57,6 +59,7 @@ class Product {
     String? category,
     String? image,
     int? count,
+    bool? isLiked,
   }) {
     return Product(
       id: id ?? this.id,
@@ -66,6 +69,7 @@ class Product {
       category: category ?? this.category,
       image: image ?? this.image,
       count: count ?? this.count,
+      isLiked: isLiked ?? this.isLiked,
     );
   }
 
@@ -76,4 +80,8 @@ class Product {
 
   @override
   int get hashCode => id.hashCode;
+
+  @override
+  List<Object?> get props =>
+      [id, title, price, description, category, image, count, isLiked];
 }
