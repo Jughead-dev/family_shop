@@ -4,16 +4,17 @@ import 'package:oila_market/model/bag_entity.dart';
 @dao
 abstract class BagDao {
   @Insert(onConflict: OnConflictStrategy.replace)
-  Future<void> saveBag(BagEntity bag);
+  Future<void> insertBagItem(BagEntity item);
 
-  @Query('SELECT * FROM bag_entity WHERE id = :id')
-  Future<BagEntity?> getBagById(int id);
-  @Query("SELECT * FROM bag_entity")
-  Future<List<BagEntity>> getAllBag();
-
-  @Query('DELETE FROM bag_entity')
-  Future<void> clear();
+  @Update(onConflict: OnConflictStrategy.replace)
+  Future<void> updateBagItem(BagEntity item);
 
   @delete
-  Future<void> deleteBag(BagEntity bag);
+  Future<void> deleteBagItem(BagEntity item);
+
+  @Query('SELECT * FROM bag_entity WHERE id = :id')
+  Future<BagEntity?> getBagItemById(int id);
+
+  @Query('SELECT * FROM bag_entity')
+  Future<List<BagEntity>> getAllBagItems();
 }

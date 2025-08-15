@@ -1,19 +1,16 @@
 import 'package:floor/floor.dart';
 import 'package:oila_market/model/favorite_entity.dart';
-
 @dao
 abstract class FavoriteDao {
   @Insert(onConflict: OnConflictStrategy.replace)
-  Future<void> saveProduct(FavoriteEntity favorite);
+  Future<void> insertFavoriteItem(FavoriteEntity item);
 
-  @Query('SELECT * FROM favorites WHERE id = :id')
-  Future<FavoriteEntity?> getFavoriteById(int id);
-  @Query("SELECT * FROM favorites")
-  Future<List<FavoriteEntity>> getAllFavorite();
+  @Query('DELETE FROM favorite_entity WHERE id = :id')
+  Future<void> deleteFavoriteItem(int id);
 
-  @Query('DELETE FROM favorites')
-  Future<void> clear();
-
-  @delete
-  Future<void> deleteFavorite(FavoriteEntity favorite);
+  @Query('SELECT * FROM favorite_entity WHERE id = :id')
+  Future<FavoriteEntity?> getFavoriteItemById(int id);
+  
+  @Query('SELECT * FROM favorite_entity')
+  Stream<List<FavoriteEntity>> getAllFavorites();
 }

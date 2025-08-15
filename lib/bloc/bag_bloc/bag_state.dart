@@ -26,6 +26,15 @@ class BagState extends Equatable {
       bagList: bagList ?? this.bagList,
       allProduct: allProduct ?? this.allProduct,
     );
+  
+  }
+  static BagState initial() {
+    return const BagState(
+      isEmpty: true,
+      isLoading: false,
+      bagList: [],
+      allProduct: [],
+    );
   }
 
   @override

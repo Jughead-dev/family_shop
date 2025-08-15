@@ -1,3 +1,4 @@
+
 import 'package:equatable/equatable.dart';
 import 'package:oila_market/model/product.dart';
 
@@ -15,8 +16,9 @@ class HomeState extends Equatable {
     bool? isLoading,
   }) {
     return HomeState(
-        isLoading: isLoading ?? this.isLoading,
-        products: products ?? this.products);
+      isLoading: isLoading ?? this.isLoading,
+      products: products ?? this.products,
+    );
   }
 
   @override

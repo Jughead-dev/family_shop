@@ -1,9 +1,9 @@
 import 'package:floor/floor.dart';
 import 'package:oila_market/model/product.dart';
 
-@Entity(tableName: "bag_entity")
+@entity
 class BagEntity {
-  @PrimaryKey(autoGenerate: true)
+  @primaryKey
   final int? id;
   final String title;
   final double price;
@@ -13,7 +13,7 @@ class BagEntity {
   final int count;
 
   BagEntity({
-    required this.id,
+    this.id,
     required this.title,
     required this.price,
     required this.description,
@@ -21,36 +21,6 @@ class BagEntity {
     required this.image,
     this.count = 1,
   });
-
-  factory BagEntity.fromJson(Map<String, dynamic> json) {
-    return BagEntity(
-      id: json['id'],
-      title: json['title'],
-      price: (json['price'] as num).toDouble(),
-      description: json['description'],
-      category: json['category'],
-      image: json['image'],
-      count: json['count'] ?? 1,
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'price': price,
-        'description': description,
-        'category': category,
-        'image': image,
-        'count': count,
-      };
-
-  @override
-  bool operator ==(Object other) {
-    return other is BagEntity && other.id == id;
-  }
-
-  @override
-  int get hashCode => id.hashCode;
 
   Product toProduct() {
     return Product(
@@ -61,6 +31,26 @@ class BagEntity {
       category: category,
       image: image,
       count: count,
+    );
+  }
+
+  BagEntity copyWith({
+    int? id,
+    String? title,
+    double? price,
+    String? description,
+    String? category,
+    String? image,
+    int? count,
+  }) {
+    return BagEntity(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      price: price ?? this.price,
+      description: description ?? this.description,
+      category: category ?? this.category,
+      image: image ?? this.image,
+      count: count ?? this.count,
     );
   }
 }

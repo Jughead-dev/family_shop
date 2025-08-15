@@ -67,7 +67,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                   trailing: IconButton(
                     icon: Icon(Icons.delete, color: Colors.red),
                     onPressed: () {
-                      context.read<FavoriteCubit>().removeFavorites(product);
+                     // context.read<FavoriteCubit>().removeFavorites(product);
                     },
                   ),
                   onTap: () async {

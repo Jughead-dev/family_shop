@@ -1,7 +1,7 @@
 
 import 'package:oila_market/data/local/database/database.dart';
 
-class DatabaseServise {
+class DatabaseService {
   static AppDatabase? _database;
   static AppDatabase? database = _database;
   static initialize() async {

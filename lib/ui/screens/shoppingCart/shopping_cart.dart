@@ -15,6 +15,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<BagCubit>(context).loadBagItems();
   }
 
   @override
@@ -34,6 +35,35 @@ class _ShoppingCartState extends State<ShoppingCart> {
         ),
         title: const Text("Your Bag"),
         centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: IconButton(
+              onPressed: () {
+                final cubit = context.read<BagCubit>();
+                if (cubit.state.bagList.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("siz xali buyurtma bermadingiz"),
+                      showCloseIcon: true,
+                    ),
+                  );
+                } else {
+                  BlocProvider.of<BagCubit>(context).clearBag();
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      const SnackBar(
+                        content: Text("barcha mahsulotlar o'chirildi"),
+                        showCloseIcon: true,
+                      ),
+                    );
+                }
+              },
+              icon: const Icon(Icons.delete, size: 30),
+            ),
+          ),
+        ],
       ),
       body: BlocBuilder<BagCubit, BagState>(builder: (context, state) {
         final cartItems = state.bagList;
@@ -43,6 +73,25 @@ class _ShoppingCartState extends State<ShoppingCart> {
 
         return Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Total Items: ${context.read<BagCubit>().getTotalItems()}",
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  Text(
+                    "Total Price: \$${context.read<BagCubit>().getTotalPrice().toStringAsFixed(2)}",
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Expanded(
               child: ListView.builder(
                 itemCount: cartItems.length,
@@ -141,32 +190,60 @@ class _ShoppingCartState extends State<ShoppingCart> {
                 },
               ),
             ),
-            Container(
-              padding: const EdgeInsets.all(12),
-              color: Colors.grey[100],
-              child: BlocBuilder<BagCubit, BagState>(builder: (context, state) {
-                final cubit = BlocProvider.of<BagCubit>(context);
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Total Items: ${cubit.getTotalItems()}",
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    Text(
-                      "Total Price: \$${cubit.getTotalPrice().toString()}",
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                );
-              }),
-            ),
           ],
         );
       }),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(left: 30),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.orange,
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                height: 60,
+                child: ElevatedButton(
+                  onPressed: () {
+                    final cubit = context.read<BagCubit>();
+                    if (cubit.state.bagList.isNotEmpty) {
+                      cubit.clearBag();
+                      ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(
+                          const SnackBar(
+                            content: Row(
+                              children: [
+                                Icon(Icons.info, color: Colors.white),
+                                SizedBox(width: 10),
+                                Text("mahsulotlar tez orada yetkaziladi"),
+                              ],
+                            ),
+                            showCloseIcon: true,
+                          ),
+                        );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.white,
+                    minimumSize: Size(double.infinity, 60),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                  child: Text(
+                    "PLACING AN ORDER",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
