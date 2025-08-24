@@ -5,79 +5,54 @@ import 'package:oila_market/bloc/favorite_bloc/favorite_cubit.dart';
 import 'package:oila_market/bloc/favorite_bloc/favorite_state.dart';
 import 'package:oila_market/ui/screens/detail/detail_screen.dart';
 
-class FavoriteScreen extends StatefulWidget {
+class FavoriteScreen extends StatelessWidget {
   const FavoriteScreen({super.key});
-
-  @override
-  State<FavoriteScreen> createState() => _FavoriteScreenState();
-}
-
-class _FavoriteScreenState extends State<FavoriteScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: Icon(size: 30, Icons.arrow_back),
-        ),
-        title: Text("Your Favorites"),
-        centerTitle: true,
+        title: const Text("Your Favorites"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete_forever),
+            onPressed: () => context.read<FavoriteCubit>().clearFavorites(),
+          ),
+        ],
       ),
       body: BlocBuilder<FavoriteCubit, FavoriteState>(
         builder: (context, state) {
           if (state.favorites.isEmpty) {
-            return Center(child: Text('No favorites yet'));
+            return const Center(child: Text('No favorites yet'));
           }
 
           return ListView.builder(
             itemCount: state.favorites.length,
-            itemBuilder: (context, index) {
-              final product = state.favorites[index];
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: Colors.white,
+            itemBuilder: (context, i) {
+              final p = state.favorites[i];
+              return Card(
+                elevation: 4, // 🔥 shadow balandligi
+                margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
                 ),
                 child: ListTile(
                   leading: CachedNetworkImage(
-                    imageUrl: product.image,
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.contain,
-                  ),
-                  title: Text(product.title),
-                  subtitle: Text("\$${product.price.toString()}"),
+                      imageUrl: p.image,
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.contain),
+                  title: Text(p.title),
+                  subtitle: Text("\$${p.price}"),
                   trailing: IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
-                    onPressed: () {
-                     // context.read<FavoriteCubit>().removeFavorites(product);
-                    },
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () =>
+                        context.read<FavoriteCubit>().deleteFavorite(p),
                   ),
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => DetailScreen(product: product),
-                      ),
-                    );
-                  },
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => DetailScreen(product: p)),
+                  ),
                 ),
               );
             },

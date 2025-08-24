@@ -1,10 +1,11 @@
 import 'package:floor/floor.dart';
 import 'package:oila_market/model/product.dart';
 
-@entity
+@Entity(tableName: 'bag_entity')
 class BagEntity {
-  @primaryKey
-  final int? id;
+  @PrimaryKey() 
+  final int id;
+
   final String title;
   final double price;
   final String description;
@@ -12,8 +13,8 @@ class BagEntity {
   final String image;
   final int count;
 
-  BagEntity({
-    this.id,
+  const BagEntity({
+    required this.id,
     required this.title,
     required this.price,
     required this.description,

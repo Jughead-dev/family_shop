@@ -12,6 +12,9 @@ abstract class BagDao {
   @delete
   Future<void> deleteBagItem(BagEntity item);
 
+  @Query('DELETE FROM bag_entity')
+  Future<void> clearBag();
+
   @Query('SELECT * FROM bag_entity WHERE id = :id')
   Future<BagEntity?> getBagItemById(int id);
 

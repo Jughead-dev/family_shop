@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
+import 'package:oila_market/model/bag_entity.dart';
+import 'package:oila_market/model/favorite_entity.dart';
 
 List<Product> productsFromJson(String str) => List<Product>.from(
       json.decode(str).map((x) => Product.fromJson(x)),
@@ -29,7 +31,7 @@ class Product extends Equatable {
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      id: json['id'],
+      id: json['id'] ?? DateTime.now().millisecondsSinceEpoch,
       title: json['title'],
       price: (json['price'] as num).toDouble(),
       description: json['description'],
@@ -70,6 +72,30 @@ class Product extends Equatable {
       image: image ?? this.image,
       count: count ?? this.count,
       isLiked: isLiked ?? this.isLiked,
+    );
+  }
+
+  FavoriteEntity get toFavoriteEntity {
+    return FavoriteEntity(
+      productId: id ?? 0,
+      title: title,
+      price: price,
+      description: description,
+      category: category,
+      image: image,
+      count: count,
+    );
+  }
+
+  BagEntity get toBagEntity {
+    return BagEntity(
+      id: id ?? 0,
+      title: title,
+      price: price,
+      description: description,
+      category: category,
+      image: image,
+      count: count,
     );
   }
 

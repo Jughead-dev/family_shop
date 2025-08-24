@@ -1,66 +1,68 @@
 import 'package:floor/floor.dart';
 import 'package:oila_market/model/product.dart';
 
-@Entity(tableName: "favorites")
+@Entity(tableName: 'favorite_entity')
 class FavoriteEntity {
   @PrimaryKey(autoGenerate: true)
-  final int? id;
+  final int? productId;
+
   final String title;
-  final double price;
   final String description;
   final String category;
   final String image;
+  final double price;
   final int count;
 
-  FavoriteEntity({
-    required this.id,
+  const FavoriteEntity({
+    required this.productId,
     required this.title,
-    required this.price,
     required this.description,
     required this.category,
     required this.image,
+    required this.price,
     this.count = 1,
   });
 
-  factory FavoriteEntity.fromJson(Map<String, dynamic> json) {
+  factory FavoriteEntity.fromProduct(Product p) {
     return FavoriteEntity(
-      id: json['id'],
-      title: json['title'],
-      price: (json['price'] as num).toDouble(),
-      description: json['description'],
-      category: json['category'],
-      image: json['image'],
-      count: json['count'] ?? 1,
+      productId: (p.id ?? 0),
+      title: p.title,
+      description: p.description,
+      category: p.category,
+      image: p.image,
+      price: p.price,
+      count: p.count,
     );
   }
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'price': price,
-        'description': description,
-        'category': category,
-        'image': image,
-        'count': count,
-      };
-
-  @override
-  bool operator ==(Object other) {
-    return other is FavoriteEntity && other.id == id;
-  }
-
-  @override
-  int get hashCode => id.hashCode;
-
   Product toProduct() {
     return Product(
-      id: id,
+      id: productId,
       title: title,
-      price: price,
       description: description,
       category: category,
       image: image,
+      price: price,
       count: count,
+    );
+  }
+   FavoriteEntity copyWith({
+    int? productId,
+    String? title,
+    String? description,
+    String? category,
+    String? image,
+    double? price,
+    int? count,
+  }) {
+    return FavoriteEntity(
+      productId: productId ?? this.productId,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      category: category ?? this.category,
+      image: image ?? this.image,
+      price: price ?? this.price,
+      count: count ?? this.count,
     );
   }
 }

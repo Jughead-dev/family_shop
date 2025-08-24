@@ -94,6 +94,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
             ),
             Expanded(
               child: ListView.builder(
+                 padding: const EdgeInsets.only(bottom: 80),
                 itemCount: cartItems.length,
                 itemBuilder: (context, index) {
                   final product = state.bagList[index];
@@ -164,7 +165,16 @@ class _ShoppingCartState extends State<ShoppingCart> {
                                     IconButton(
                                       onPressed: () {
                                         BlocProvider.of<BagCubit>(context)
-                                            .addToBag(product);
+                                            .addToBag(product, onAdded: () {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content:
+                                                  Text("Mahsulot qo'shildi"),
+                                              showCloseIcon: true,
+                                            ),
+                                          );
+                                        });
                                       },
                                       icon:
                                           const Icon(Icons.add_circle_outline),

@@ -8,7 +8,7 @@ import 'package:oila_market/model/favorite_entity.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 part 'database.g.dart';
 
-@Database(version: 1, entities: [BagEntity, FavoriteEntity])
+@Database(version: 2, entities: [BagEntity, FavoriteEntity])
 abstract class AppDatabase extends FloorDatabase {
   BagDao get bagDao;
   FavoriteDao get favoriteDao;

@@ -6,11 +6,11 @@ class FavoriteState extends Equatable {
 
   const FavoriteState({this.favorites = const []});
 
-  FavoriteState copyWith({
-    List<Product>? favorites,
-  }) {
+  FavoriteState copyWith({List<Product>? favorites}) {
     return FavoriteState(favorites: favorites ?? this.favorites);
   }
+
+  factory FavoriteState.initial() => const FavoriteState(favorites: []);
 
   @override
   List<Object?> get props => [favorites];

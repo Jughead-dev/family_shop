@@ -1,73 +1,62 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oila_market/bloc/bag_bloc/bag_state.dart';
 import 'package:oila_market/data/local/dao/bag_dao.dart';
-import 'package:oila_market/data/local/database/database_service.dart';
-import 'package:oila_market/model/bag_entity.dart';
 import 'package:oila_market/model/product.dart';
 
 class BagCubit extends Cubit<BagState> {
-  BagDao? bagDao;
-  BagCubit():super(BagState.initial()) {
-    bagDao = DatabaseService.database!.bagDao;
-  }
+  final BagDao bagDao;
+  BagCubit(this.bagDao) : super(BagState.initial());
+
   Future<void> loadBagItems() async {
-    final items = await bagDao?.getAllBagItems()??[];
-
-    final entities = items.map((entity)=>entity.toProduct()).toList();
-    emit(state.copyWith(bagList: entities, isEmpty: items.isEmpty));
-    if ( items.isEmpty) {
-      emit(state.copyWith(isEmpty: true));
-    } else {
-      emit(state.copyWith(isEmpty: false));
-    }
+    final items = await bagDao.getAllBagItems();
+    final products = items.map((e) => e.toProduct()).toList();
+    emit(state.copyWith(bagList: products, isEmpty: products.isEmpty));
   }
 
-  double getTotalPrice() {
-    double total = 0;
-    for (int i = 0; i < state.bagList.length; i++) {
-      total += state.bagList[i].price * state.bagList[i].count;
-    }
-    return total;
-  }
+  double getTotalPrice() => state.bagList.fold(
+        0.0,
+        (sum, p) => sum + (p.price * p.count),
+      );
 
-  int getTotalItems() {
-    return state.bagList.length;
-  }
+  int getTotalItems() => state.bagList.length;
 
-  void clearBag() async {
-    await bagDao?.deleteBagItem(state.bagList as BagEntity);
+  Future<void> clearBag() async {
+    await bagDao.clearBag();
     emit(state.copyWith(bagList: [], isEmpty: true));
   }
 
-  void addToBag(Product product) {
-    final List<Product> updatedList = List<Product>.from(state.bagList);
-    final index = updatedList.indexWhere((p) => p.id == product.id);
+  Future<void> addToBag(Product product, {required Function() onAdded}) async {
+    final pid = product.id;
+    if (pid == null) return;
 
-    if (index != -1) {
-      final updatedProduct = updatedList[index].copyWith(
-        count: updatedList[index].count + 1,
-      );
-      updatedList[index] = updatedProduct;
+    final existing = await bagDao.getBagItemById(pid);
+    if (existing != null) {
+      await bagDao.updateBagItem(existing.copyWith(count: existing.count + 1));
     } else {
-      final newProduct = product.copyWith(count: 1);
-      updatedList.add(newProduct);
+      await bagDao.insertBagItem(product.toBagEntity);
     }
 
-    emit(state.copyWith(bagList: updatedList));
+    final list = await bagDao.getAllBagItems();
+    final updated = list.map((e) => e.toProduct()).toList();
+    emit(state.copyWith(bagList: updated, isEmpty: updated.isEmpty));
+    onAdded();
   }
 
-  void removeFromBag(Product product) {
-    List<Product> list = List.from(state.bagList);
-    for (var i = 0; i < list.length; i++) {
-      if (list[i].id == product.id) {
-        if (list[i].count > 1) {
-          list[i] = list[i].copyWith(count: list[i].count - 1);
-        } else {
-          list.removeAt(i);
-        }
-        break;
-      }
+  Future<void> removeFromBag(Product product) async {
+    final pid = product.id;
+    if (pid == null) return;
+
+    final existing = await bagDao.getBagItemById(pid);
+    if (existing == null) return;
+
+    if (existing.count > 1) {
+      await bagDao.updateBagItem(existing.copyWith(count: existing.count - 1));
+    } else {
+      await bagDao.deleteBagItem(existing);
     }
-    emit(state.copyWith(bagList: list));
+
+    final list = await bagDao.getAllBagItems();
+    final updated = list.map((e) => e.toProduct()).toList();
+    emit(state.copyWith(bagList: updated, isEmpty: updated.isEmpty));
   }
 }

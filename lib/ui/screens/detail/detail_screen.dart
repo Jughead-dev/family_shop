@@ -8,19 +8,9 @@ import 'package:oila_market/ui/screens/shoppingCart/shopping_cart.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oila_market/bloc/bag_bloc/bag_cubit.dart';
 
-class DetailScreen extends StatefulWidget {
+class DetailScreen extends StatelessWidget {
   final Product product;
   const DetailScreen({super.key, required this.product});
-
-  @override
-  State<DetailScreen> createState() => _DetailScreenState();
-}
-
-class _DetailScreenState extends State<DetailScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +18,10 @@ class _DetailScreenState extends State<DetailScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: Padding(
-          padding: EdgeInsets.all(6),
+          padding: const EdgeInsets.all(6),
           child: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.arrow_back,
-              size: 30,
-            ),
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.arrow_back, size: 30),
           ),
         ),
         actions: [
@@ -44,40 +29,34 @@ class _DetailScreenState extends State<DetailScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => ShoppingCart(),
-                ),
+                MaterialPageRoute(builder: (_) => const ShoppingCart()),
               );
             },
-            icon: Icon(
-              Icons.shopping_bag_outlined,
-              size: 30,
-            ),
+            icon: const Icon(Icons.shopping_bag_outlined, size: 30),
           ),
-          SizedBox(width: 18),
+          const SizedBox(width: 18),
         ],
       ),
       body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
         child: Container(
           color: Colors.white,
-          padding: EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           child: Column(
             children: [
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               CachedNetworkImage(
-                imageUrl: widget.product.image,
+                imageUrl: product.image,
                 height: 300,
                 width: double.infinity,
                 fit: BoxFit.contain,
               ),
-              SizedBox(height: 22),
+              const SizedBox(height: 22),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Expanded(
                     child: Text(
-                      "\$${widget.product.price.toString()}",
+                      "\$${product.price}",
                       style: TextStyle(
                         color: AppColors.green,
                         fontSize: 22,
@@ -91,34 +70,38 @@ class _DetailScreenState extends State<DetailScreen> {
                       borderRadius: BorderRadius.circular(50),
                     ),
                     child: BlocBuilder<FavoriteCubit, FavoriteState>(
-                        builder: (context, state) {
-                      return IconButton(
-                          onPressed: () {},
-                          icon: widget.product.isLiked
-                              ? Icon(Icons.favorite, color: Colors.red)
-                              : Icon(Icons.favorite_border,
-                                  color: Colors.black));
-                    }),
+                      builder: (context, state) {
+                        final isFav = context.read<FavoriteCubit>().isFavorite(product); ;
+                        return IconButton(
+                          onPressed: () {
+                            context.read<FavoriteCubit>().toggleFavorite(product);
+                          },
+                          icon: isFav
+                              ? const Icon(Icons.favorite, color: Colors.red)
+                              : const Icon(Icons.favorite_border, color: Colors.black),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
               Text(
-                widget.product.title,
+                product.title,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: AppColors.black,
                   fontSize: 20,
                 ),
               ),
-              SizedBox(height: 22),
+              const SizedBox(height: 22),
               Text(
-                widget.product.description,
-                style: TextStyle(
+                product.description,
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
               ),
-              SizedBox(height: 112),
+              const SizedBox(height: 112),
             ],
           ),
         ),
@@ -130,41 +113,42 @@ class _DetailScreenState extends State<DetailScreen> {
             Expanded(
               flex: 2,
               child: Container(
+                height: 60,
                 decoration: BoxDecoration(
                   color: Colors.orange,
                   borderRadius: BorderRadius.circular(50),
                 ),
-                height: 60,
                 child: ElevatedButton(
-                  onPressed: () async {
-                    BlocProvider.of<BagCubit>(context).addToBag(widget.product);
-                    ScaffoldMessenger.of(context)
-                      ..hideCurrentSnackBar()
-                      ..showSnackBar(
-                        SnackBar(
-                          content: Row(
-                            children: [
-                              Icon(Icons.info),
-                              Text("Mahsulot qoshildi"),
-                            ],
+                  onPressed: () {
+                    context.read<BagCubit>().addToBag(product, onAdded: () {
+                      ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(
+                          const SnackBar(
+                            content: Row(
+                              children: [
+                                Icon(Icons.info),
+                                Text("Mahsulot qo'shildi"),
+                              ],
+                            ),
+                            showCloseIcon: true,
                           ),
-                          showCloseIcon: true,
-                        ),
+                        );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const ShoppingCart()),
                       );
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => ShoppingCart()),
-                    );
+                    });
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orange,
                     foregroundColor: Colors.white,
-                    minimumSize: Size(double.infinity, 60),
+                    minimumSize: const Size(double.infinity, 60),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     "ADD TO BAG",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
